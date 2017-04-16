@@ -6,14 +6,14 @@ using Newtonsoft.Json.Serialization;
 
 namespace LanguageServer.VsCode.JsonRpc
 {
-    internal static class MessageSerializer
+    internal static class RpcSerializer
     {
-        private static readonly JsonSerializer serializer = new JsonSerializer
+        public static readonly JsonSerializer Serializer = new JsonSerializer
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
-        internal static Message Deserialize(string content)
+        internal static Message DeserializeMessage(string content)
         {
             var json = JObject.Parse(content);
             Message message;
@@ -24,21 +24,21 @@ namespace LanguageServer.VsCode.JsonRpc
             using (var jreader = new JsonTextReader(reader))
             {
                 if (json.GetValue("id", StringComparison.OrdinalIgnoreCase) == null)
-                    message = serializer.Deserialize<NotificationMessage>(jreader);
+                    message = Serializer.Deserialize<NotificationMessage>(jreader);
                 else if (json.GetValue("method", StringComparison.OrdinalIgnoreCase) == null)
-                    message = serializer.Deserialize<ResponseMessage>(jreader);
+                    message = Serializer.Deserialize<ResponseMessage>(jreader);
                 else
-                    message = serializer.Deserialize<RequestMessage>(jreader);
+                    message = Serializer.Deserialize<RequestMessage>(jreader);
             }
             return message;
         }
 
-        internal static string Serialize(Message message)
+        internal static string SerializeMessage(Message message)
         {
             using (var writer = new StringWriter())
             using (var jwriter = new JsonTextWriter(writer))
             {
-                serializer.Serialize(jwriter, message);
+                Serializer.Serialize(jwriter, message);
                 return writer.ToString();
             }
         }

@@ -45,7 +45,7 @@ namespace LanguageServer.VsCode.JsonRpc
 
                 var content = buffer.TryReadContent();
 
-                message = MessageSerializer.Deserialize(content);
+                message = RpcSerializer.DeserializeMessage(content);
                 buffer = new MessageBuffer(Encoding);
             }
 

@@ -24,7 +24,7 @@ namespace LanguageServer.VsCode.JsonRpc
 
         public override async Task WriteAsync(Message message)
         {
-            var json = MessageSerializer.Serialize(message);
+            var json = RpcSerializer.SerializeMessage(message);
 
             var builder = new StringBuilder($"Content-Length: {json.Length}\r\nContent-Type: application/vscode-jsonrpc; charset=utf8\r\n\r\n");
             builder.Append(json);
