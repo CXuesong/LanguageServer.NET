@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace LanguageServer.VsCode.JsonRpc
@@ -27,5 +28,15 @@ namespace LanguageServer.VsCode.JsonRpc
         /// </summary>
         [JsonProperty]
         public JObject Params { get; set; }
+
+        public object GetParams(Type paramsType)
+        {
+            return Params?.ToObject(paramsType, RpcSerializer.Serializer);
+        }
+
+        public T GetParams<T>()
+        {
+            return Params == null ? default(T) : Params.ToObject<T>(RpcSerializer.Serializer);
+        }
     }
 }

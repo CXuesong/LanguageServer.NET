@@ -20,7 +20,7 @@ namespace LanguageServer.VsCode.JsonRpc
         /// A <see cref="JObject" /> representing an error that occurred while processing the request.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public JObject Error { get; set; }
+        public IResponseError Error { get; set; }
 
         /// <summary>
         /// A unique ID assigned to the request/response session. The request creator is responsible for this value.
@@ -31,7 +31,7 @@ namespace LanguageServer.VsCode.JsonRpc
         /// <summary>
         /// A <see cref="JObject" /> representing the result of processing the request.
         /// </summary>
-        [JsonProperty]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public JObject Result { get; set; }
     }
 }
