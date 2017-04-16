@@ -1,11 +1,12 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
-namespace VSCode.JsonRpc
+namespace LanguageServer.VsCode.JsonRpc
 {
     /// <summary>
-    /// An <see cref="IMessage" /> implementation representing a JSON-RPC notification.
+    /// An <see cref="Message" /> implementation representing a JSON-RPC notification.
     /// </summary>
-    public class NotificationMessage : IMessage
+    public class NotificationMessage : Message
     {
         /// <summary>
         /// Creates a new <see cref="NotificationMessage" /> instance.
@@ -16,18 +17,15 @@ namespace VSCode.JsonRpc
         }
 
         /// <summary>
-        /// See <see cref="IMessage.Version" />.
-        /// </summary>
-        public string Version { get; set; }
-
-        /// <summary>
         /// The method to invoke on the receiver.
         /// </summary>
+        [JsonProperty]
         public string Method { get; set; }
 
         /// <summary>
         /// A <see cref="JObject" /> representing parameters for the method.
         /// </summary>
+        [JsonProperty]
         public JObject Params { get; set; }
     }
 }

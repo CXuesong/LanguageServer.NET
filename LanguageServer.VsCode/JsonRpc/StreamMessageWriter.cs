@@ -2,33 +2,34 @@
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VSCode.JsonRpc
+namespace LanguageServer.VsCode.JsonRpc
 {
-    internal class StreamMessageWriter : IMessageWriter
+    public class StreamMessageWriter : MessageWriter
     {
-        internal StreamMessageWriter(Stream stream)
+        public StreamMessageWriter(Stream stream)
         {
             BaseStream = stream;
             Encoding = Encoding.UTF8;
         }
 
-        internal StreamMessageWriter(Stream stream, Encoding encoding)
+        public StreamMessageWriter(Stream stream, Encoding encoding)
             : this(stream)
         {
             Encoding = encoding;
         }
 
-        internal Stream BaseStream { get; private set; }
-        internal Encoding Encoding { get; private set; }
+        public Stream BaseStream { get; }
 
-        public async Task WriteAsync(IMessage message)
+        public Encoding Encoding { get; }
+
+        public override async Task WriteAsync(Message message)
         {
-            string json = MessageSerializer.Serialize(message);
+            var json = MessageSerializer.Serialize(message);
 
-            StringBuilder builder = new StringBuilder($"Content-Length: {json.Length}\r\nContent-Type: application/vscode-jsonrpc; charset=utf8\r\n\r\n");
+            var builder = new StringBuilder($"Content-Length: {json.Length}\r\nContent-Type: application/vscode-jsonrpc; charset=utf8\r\n\r\n");
             builder.Append(json);
 
-            byte[] data = Encoding.GetBytes(builder.ToString());
+            var data = Encoding.GetBytes(builder.ToString());
 
             await BaseStream.WriteAsync(data, 0, data.Length);
         }

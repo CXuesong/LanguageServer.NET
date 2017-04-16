@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace VSCode.JsonRpc
+namespace LanguageServer.VsCode.JsonRpc
 {
     /// <summary>
-    /// An <see cref="IMessage" /> implementation representing a JSON-RPC response.
+    /// An <see cref="Message" /> implementation representing a JSON-RPC response.
     /// </summary>
-    public class ResponseMessage : IMessage
+    public class ResponseMessage : Message
     {
         /// <summary>
         /// Creates a new <see cref="ResponseMessage" /> instance.
@@ -25,16 +25,13 @@ namespace VSCode.JsonRpc
         /// <summary>
         /// A unique ID assigned to the request/response session. The request creator is responsible for this value.
         /// </summary>
+        [JsonProperty]
         public int Id { get; set; }
-
-        /// <summary>
-        /// See <see cref="IMessage.Version" />.
-        /// </summary>
-        public string Version { get; set; }
 
         /// <summary>
         /// A <see cref="JObject" /> representing the result of processing the request.
         /// </summary>
+        [JsonProperty]
         public JObject Result { get; set; }
     }
 }

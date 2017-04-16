@@ -1,4 +1,4 @@
-﻿namespace VSCode.JsonRpc
+﻿namespace LanguageServer.VsCode.JsonRpc
 {
     /// <summary>
     /// Error codes defined by the JSON-RPC 2.0 specification.

@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace VSCode.JsonRpc
+namespace LanguageServer.VsCode.JsonRpc
 {
     /// <summary>
     /// Contains all of the "internals" responsible for implementating JSON-RPC and the base language server protocol.

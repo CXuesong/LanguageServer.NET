@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Text;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-namespace VSCode.JsonRpc
+namespace LanguageServer.VsCode.JsonRpc
 {
-    internal class MessageBuffer
+    public class MessageBuffer
     {
         private const string _ContentLength = "Content-Length";
         private const string _HeaderContentSeperator = "\r\n\r\n";
@@ -27,7 +27,7 @@ namespace VSCode.JsonRpc
             Encoding = encoding;
         }
 
-        internal Encoding Encoding { get; private set; }
+        internal Encoding Encoding { get; }
 
         internal string RawMessage
         {
@@ -41,10 +41,10 @@ namespace VSCode.JsonRpc
         {
             get
             {
-                int length = -1;
+                var length = -1;
                 int.TryParse(TryReadHeaders()?["Content-Length"], out length);
 
-                string content = TryReadContent();
+                var content = TryReadContent();
 
                 if (!string.IsNullOrWhiteSpace(content))
                 {
@@ -57,11 +57,7 @@ namespace VSCode.JsonRpc
 
         internal void Append(byte[] chunk)
         {
-            if (chunk == null)
-            {
-                return;
-            }
-
+            if (chunk == null) return;
             _buffer.AddRange(chunk);
         }
 
@@ -79,19 +75,19 @@ namespace VSCode.JsonRpc
         {
             if (length < 1)
             {
-                throw new ArgumentException("Length must be greater than 0.", "length");
+                throw new ArgumentException("Length must be greater than 0.", nameof(length));
             }
 
-            string raw = _GetBufferAsString();
-            string[] parts = raw.Split(new string[] { _HeaderContentSeperator }, StringSplitOptions.RemoveEmptyEntries);
+            var raw = _GetBufferAsString();
+            var parts = raw.Split(new string[] { _HeaderContentSeperator }, StringSplitOptions.RemoveEmptyEntries);
 
             if (parts.Length < 2)
             {
                 return null;
             }
 
-            string content = string.Join(string.Empty, parts.Skip(1));
-            int safeLength = (length > content.Length) ? content.Length : length;
+            var content = string.Join(string.Empty, parts.Skip(1));
+            var safeLength = (length > content.Length) ? content.Length : length;
 
             return content.Substring(0, safeLength); ;
         }
@@ -103,21 +99,21 @@ namespace VSCode.JsonRpc
 
         internal Dictionary<string, string> TryReadHeaders()
         {
-            Dictionary<string, string> results = new Dictionary<string, string>();
+            var results = new Dictionary<string, string>();
 
-            string raw = _GetBufferAsString();
-            string[] parts = raw.Split(new string[] { _HeaderContentSeperator }, StringSplitOptions.RemoveEmptyEntries);
+            var raw = _GetBufferAsString();
+            var parts = raw.Split(new string[] { _HeaderContentSeperator }, StringSplitOptions.RemoveEmptyEntries);
 
             if (parts.Length < 1)
             {
                 return null;
             }
 
-            string[] headers = parts[0].Split(new string[] { _HeaderDelimiter }, StringSplitOptions.RemoveEmptyEntries);
+            var headers = parts[0].Split(new string[] { _HeaderDelimiter }, StringSplitOptions.RemoveEmptyEntries);
 
-            foreach (string header in headers)
+            foreach (var header in headers)
             {
-                string[] pair = header.Split(_HeaderKeyValueSeperator);
+                var pair = header.Split(_HeaderKeyValueSeperator);
 
                 if (pair.Length < 2)
                 {
