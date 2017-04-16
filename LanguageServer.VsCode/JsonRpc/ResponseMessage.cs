@@ -29,9 +29,9 @@ namespace LanguageServer.VsCode.JsonRpc
         public int Id { get; set; }
 
         /// <summary>
-        /// A <see cref="JObject" /> representing the result of processing the request.
+        /// An object representing the result of processing the request.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public JObject Result { get; set; }
+        public object Result { get; set; }
     }
 }
