@@ -23,7 +23,8 @@ namespace LanguageServer.VsCode.Server
             ProcessId = processId;
             RootUri = rootUri;
             InitializationOptions = initializationOptions;
-            Capabilities = capabilities;
+            ClientCapabilities = capabilities;
+            ServerCapabilities = new ServerCapabilities();
         }
 
         /// <summary>
@@ -44,7 +45,12 @@ namespace LanguageServer.VsCode.Server
         /// <summary>
         /// The capabilities provided by the client (editor).
         /// </summary>
-        public ClientCapabilities Capabilities { get; }
+        public ClientCapabilities ClientCapabilities { get; }
+
+        /// <summary>
+        /// The capabilities provided by the language server.
+        /// </summary>
+        public ServerCapabilities ServerCapabilities { get; set; }
 
     }
 
@@ -156,6 +162,10 @@ namespace LanguageServer.VsCode.Server
         }
     }
 
+    /// <summary>
+    /// Defines capabilities provided by the language server.
+    /// </summary>
+    [JsonObject(MemberSerialization.OptOut)]
     public class ServerCapabilities
     {
         /// <summary>

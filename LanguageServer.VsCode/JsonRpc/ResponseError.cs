@@ -41,6 +41,11 @@ namespace LanguageServer.VsCode.JsonRpc
         RequestCancelled = -32800,
     }
 
+    /// <summary>
+    /// Exposes basic, non-generic members of a response error.
+    /// </summary>
+    /// <remarks>It's recommended that you use or derive from <see cref="ResponseError{T}"/>
+    /// instead of implementing the interface by yourself.</remarks>
     public interface IResponseError
     {
         ErrorCode Code { get; set; }
