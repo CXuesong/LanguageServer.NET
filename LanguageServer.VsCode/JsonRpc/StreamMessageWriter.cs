@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LanguageServer.VsCode.JsonRpc
@@ -22,16 +23,20 @@ namespace LanguageServer.VsCode.JsonRpc
 
         public Encoding Encoding { get; }
 
-        public override async Task WriteAsync(Message message)
+        public override void Write(Message message)
         {
-            var json = RpcSerializer.SerializeMessage(message);
-
-            var builder = new StringBuilder($"Content-Length: {json.Length}\r\nContent-Type: application/vscode-jsonrpc; charset=utf8\r\n\r\n");
-            builder.Append(json);
-
-            var data = Encoding.GetBytes(builder.ToString());
-
-            await BaseStream.WriteAsync(data, 0, data.Length);
+            using (var ms = new MemoryStream())
+            {
+                using (var writer = new StreamWriter(ms, Encoding))
+                    RpcSerializer.SerializeMessage(writer, message);
+                using (var writer = new StreamWriter(BaseStream, Encoding))
+                {
+                    writer.Write("Content-Length: ");
+                    writer.Write(ms.Length);
+                    writer.Write("\r\nContent-Type: application/vscode-jsonrpc; charset=utf8\r\n\r\n");
+                }
+                ms.CopyTo(BaseStream);
+            }
         }
     }
 }

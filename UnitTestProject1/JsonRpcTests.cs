@@ -16,7 +16,7 @@ namespace UnitTestProject1
             using (var ss = StringToStream(source))
             {
                 var reader = new StreamMessageReader(ss);
-                var message = (RequestMessage)AwaitSync(reader.ReadAsync());
+                var message = (RequestMessage) reader.Read();
                 Assert.AreEqual("2.0", message.Version);
                 Assert.AreEqual(1, message.Id);
                 Assert.AreEqual("textDocument/didOpen", message.Method);

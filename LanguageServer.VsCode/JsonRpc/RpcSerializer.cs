@@ -15,31 +15,33 @@ namespace LanguageServer.VsCode.JsonRpc
 
         internal static Message DeserializeMessage(string content)
         {
-            var json = JObject.Parse(content);
-            Message message;
-
-            if (json.GetValue("jsonrpc", StringComparison.OrdinalIgnoreCase) == null)
-                throw new ArgumentException("Content is not a valid JSON-RPC message.", nameof(content));
             using (var reader = new StringReader(content))
-            using (var jreader = new JsonTextReader(reader))
+                return DeserializeMessage(reader);
+        }
+
+        internal static Message DeserializeMessage(TextReader reader)
+        {
+            Message message;
+            JObject json;
+            using (var jreader = new JsonTextReader(reader)) json = JObject.Load(jreader);
+            if (json.GetValue("jsonrpc", StringComparison.OrdinalIgnoreCase) == null)
+                throw new ArgumentException("Content is not a valid JSON-RPC message.", nameof(reader));
             {
                 if (json.GetValue("id", StringComparison.OrdinalIgnoreCase) == null)
-                    message = Serializer.Deserialize<NotificationMessage>(jreader);
+                    message = json.ToObject<NotificationMessage>(Serializer);
                 else if (json.GetValue("method", StringComparison.OrdinalIgnoreCase) == null)
-                    message = Serializer.Deserialize<ResponseMessage>(jreader);
+                    message = json.ToObject<ResponseMessage>(Serializer);
                 else
-                    message = Serializer.Deserialize<RequestMessage>(jreader);
+                    message = json.ToObject<RequestMessage>(Serializer);
             }
             return message;
         }
 
-        internal static string SerializeMessage(Message message)
+        internal static void SerializeMessage(TextWriter writer, Message message)
         {
-            using (var writer = new StringWriter())
             using (var jwriter = new JsonTextWriter(writer))
             {
                 Serializer.Serialize(jwriter, message);
-                return writer.ToString();
             }
         }
     }

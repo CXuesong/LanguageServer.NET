@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace LanguageServer.VsCode.JsonRpc
 {
@@ -16,5 +17,23 @@ namespace LanguageServer.VsCode.JsonRpc
         /// </remarks>
         [JsonProperty("jsonrpc")]
         public string Version { get; set; }
+    }
+
+    public class MessageReceivedEventArgs : EventArgs
+    {
+        public MessageReceivedEventArgs(Message message)
+        {
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            Message = message;
+        }
+
+        public Message Message { get; }
+
+        public ResponseMessage Response { get; set; }
+    }
+
+    public interface IMessageSource
+    {
+        event EventHandler<MessageReceivedEventArgs> MessageReceived;
     }
 }
