@@ -13,7 +13,7 @@ namespace LanguageServer.VsCode.Server
             requestHandlerDict.Add("initialize", CreateHandler<InitializingEventArgs>(e =>
                 {
                     OnInitializing(e);
-                    return new {Capabilities = e.ClientCapabilities};
+                    return new {Capabilities = e.ServerCapabilities};
                 }
             ));
             requestHandlerDict.Add("shutdown", CreateHandler<GeneralRequestEventArgs>(e => OnShutdown()));
