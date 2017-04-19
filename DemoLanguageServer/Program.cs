@@ -1,4 +1,5 @@
 ﻿//#define WAIT_FOR_DEBUGGER
+#define USE_CONSOLE_READER
 
 using System;
 using System.Diagnostics;
@@ -23,7 +24,12 @@ namespace DemoLanguageServer
             using (var logWriter = File.CreateText("messages-" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".log"))
             {
                 logWriter.AutoFlush = true;
+#if USE_CONSOLE_READER
+                var connection = new Connection(new ConsoleMessageReader(),
+                    new StreamMessageWriter(cout, new MyStreamMessageLogger(logWriter)));
+#else
                 var connection = Connection.FromStreams(cin, cout, new MyStreamMessageLogger(logWriter));
+#endif
                 using (var server = new LangServer(connection))
                 {
                     server.Start();
