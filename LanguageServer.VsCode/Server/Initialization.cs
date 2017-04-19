@@ -15,7 +15,7 @@ namespace LanguageServer.VsCode.Server
         Verbose
     }
 
-    public class InitializingEventArgs : EventArgs
+    public class InitializingEventArgs : GeneralRequestEventArgs
     {
         public InitializingEventArgs(int processId, Uri rootUri, JToken initializationOptions,
             ClientCapabilities capabilities)
@@ -30,26 +30,31 @@ namespace LanguageServer.VsCode.Server
         /// <summary>
         /// The process Id of the parent process that started the server.
         /// </summary>
+        [JsonProperty]
         public int ProcessId { get; }
 
         /// <summary>
         /// The root path of the workspace. Is null if no folder is open.
         /// </summary>
+        [JsonProperty]
         public Uri RootUri { get; }
 
         /// <summary>
         /// User provided initialization options.
         /// </summary>
+        [JsonProperty]
         public JToken InitializationOptions { get; }
 
         /// <summary>
         /// The capabilities provided by the client (editor).
         /// </summary>
+        [JsonProperty]
         public ClientCapabilities ClientCapabilities { get; }
 
         /// <summary>
         /// The capabilities provided by the language server.
         /// </summary>
+        [JsonProperty]
         public ServerCapabilities ServerCapabilities { get; set; }
 
     }

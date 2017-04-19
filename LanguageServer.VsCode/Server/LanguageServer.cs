@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using LanguageServer.VsCode.JsonRpc;
 using Newtonsoft.Json;
@@ -6,76 +7,106 @@ using Newtonsoft.Json.Linq;
 
 namespace LanguageServer.VsCode.Server
 {
-    public class LanguageServer
+    public partial class LanguageServer : IDisposable
     {
-        public LanguageServer()
+
+        public LanguageServer(IConnection connection)
         {
+            if (connection == null) throw new ArgumentNullException(nameof(connection));
+            Connection = connection;
+            Connection.MessageReceived += MessageSource_MessageReceived;
         }
 
-        #region General Messages
-
-        /// <summary>
-        /// The initialize request is sent as the first request from the client to the server. 
-        /// </summary>
-        public event EventHandler<InitializingEventArgs> Initializing;
-
-        protected virtual void OnInitializing(InitializingEventArgs e)
+        private static Func<GeneralRequestMessage, object> CreateHandler<TEventArgs>(
+            Action<TEventArgs> eventArgsHandler)
         {
-            Initializing?.Invoke(this, e);
-            IsInitialized = true;
+            if (eventArgsHandler == null) throw new ArgumentNullException(nameof(eventArgsHandler));
+            return CreateHandler<TEventArgs>(e =>
+            {
+                eventArgsHandler(e);
+                return null;
+            });
         }
 
-        #endregion
-
-        /// <summary>
-        /// Attaches the language server to a message source.
-        /// </summary>
-        public IDisposable Attach(IMessageSource messageSource)
+        private static Func<GeneralRequestMessage, object> CreateHandler<TEventArgs>(Func<TEventArgs, object> eventArgsHandler)
         {
-            if (messageSource == null) throw new ArgumentNullException(nameof(messageSource));
-            messageSource.MessageReceived += MessageSource_MessageReceived;
-            return new AttachDisposable(this, messageSource);
+            if (eventArgsHandler == null) throw new ArgumentNullException(nameof(eventArgsHandler));
+            return request =>
+            {
+                var e = request.Params.ToObject<TEventArgs>(RpcSerializer.Serializer);
+                var response = eventArgsHandler(e);
+                return response;
+            };
         }
+
+        private readonly Dictionary<string, Func<GeneralRequestMessage, object>> requestHandlerDict
+            = new Dictionary<string, Func<GeneralRequestMessage, object>>();
+
+        public IConnection Connection { get; }
+
+        public bool IsDisposed { get;private set;}
 
         public bool IsInitialized { get; private set; }
 
+        private int? exitCode;
+
+        /// <summary>
+        /// Starts the language server.
+        /// </summary>
+        /// <returns>The suggested exit code.</returns>
+        public int Start()
+        {
+            return (int) Start(-1);
+        }
+
+        /// <summary>
+        /// Starts the language server for a given duration.
+        /// </summary>
+        /// <param name="millisecondsDuration">The server stop listening after this duration. Specify -1 for infinite.</param>
+        /// <returns>The suggested exit code, or <c>null</c> if the duration has been reached.</returns>
+        public int? Start(int millisecondsDuration)
+        {
+            if (millisecondsDuration < -1) throw new ArgumentOutOfRangeException(nameof(millisecondsDuration));
+            exitCode = null;
+            Connection.Listen(millisecondsDuration);
+            return exitCode;
+        }
+
         private void MessageSource_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
-            if (e.Message is RequestMessage request)
+            if (e.Message is GeneralRequestMessage request)
             {
-                switch (request.Method)
+                if (requestHandlerDict.TryGetValue(request.Method, out var handler))
                 {
-                    case "initialize":
-                        var e1 = request.Params.ToObject<InitializingEventArgs>(RpcSerializer.Serializer);
-                        OnInitializing(e1);
-                        e.Response = new ResponseMessage(new {Capabilities = e1.ClientCapabilities});
-                        break;
-                    default:
-                        break;
+                    var response = handler(request);
+                    e.Response = response;
                 }
             }
         }
 
-        private class AttachDisposable : IDisposable
+        /// <inheritdoc />
+        protected virtual void Dispose(bool disposing)
         {
-            private readonly LanguageServer _Owner;
-            private readonly IMessageSource _MessageSource;
-
-            public AttachDisposable(LanguageServer owner, IMessageSource messageSource)
+            if (IsDisposed) return;
+            IsDisposed = true;
+            if (disposing)
             {
-                _Owner = owner;
-                _MessageSource = messageSource;
-                Debug.Assert(owner != null);
-                Debug.Assert(messageSource != null);
-
+                Connection.MessageReceived -= MessageSource_MessageReceived;
             }
+            // release unmanaged resources here
+        }
 
-            /// <inheritdoc />
-            public void Dispose()
-            {
-                _MessageSource.MessageReceived -= _Owner.MessageSource_MessageReceived;
-            }
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc />
+        ~LanguageServer()
+        {
+            Dispose(false);
         }
     }
-
 }
