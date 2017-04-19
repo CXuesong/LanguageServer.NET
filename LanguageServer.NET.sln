@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageServer.VsCode", "La
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject1", "UnitTestProject1\UnitTestProject1.csproj", "{1CBF6F5F-DF80-4352-9684-A9106CD66465}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoLanguageServer", "DemoLanguageServer\DemoLanguageServer.csproj", "{AB737C31-DA7C-4473-8E01-2DE68C6D001B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{1CBF6F5F-DF80-4352-9684-A9106CD66465}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CBF6F5F-DF80-4352-9684-A9106CD66465}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CBF6F5F-DF80-4352-9684-A9106CD66465}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB737C31-DA7C-4473-8E01-2DE68C6D001B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB737C31-DA7C-4473-8E01-2DE68C6D001B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB737C31-DA7C-4473-8E01-2DE68C6D001B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB737C31-DA7C-4473-8E01-2DE68C6D001B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
