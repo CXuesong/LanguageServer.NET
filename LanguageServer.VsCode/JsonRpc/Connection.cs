@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace LanguageServer.VsCode.JsonRpc
 {
@@ -13,6 +14,7 @@ namespace LanguageServer.VsCode.JsonRpc
         private readonly object syncLock = new object();
         private volatile CancellationTokenSource listenCts;
 
+        /// <inheritdoc />
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
 
         public Connection(MessageReader messageReader, MessageWriter messageWriter)
@@ -38,7 +40,7 @@ namespace LanguageServer.VsCode.JsonRpc
         {
             if (inStream == null) throw new ArgumentNullException(nameof(inStream));
             if (outStream == null) throw new ArgumentNullException(nameof(outStream));
-            return new Connection(new StreamMessageReader(inStream, logger), new StreamMessageWriter(outStream));
+            return new Connection(new StreamMessageReader(inStream, logger), new StreamMessageWriter(outStream, logger));
         }
 
         /// <summary>
@@ -57,6 +59,7 @@ namespace LanguageServer.VsCode.JsonRpc
             Listen(-1);
         }
 
+        /// <inheritdoc />
         public void Listen(int millisecondsTimeout)
         {
             if (millisecondsTimeout < -1) throw new ArgumentOutOfRangeException(nameof(millisecondsTimeout));
@@ -110,11 +113,13 @@ namespace LanguageServer.VsCode.JsonRpc
         {
             lock (syncLock)
             {
-                _IsListening = false;
                 listenCts?.Cancel();
             }
         }
 
+        /// <summary>
+        /// Raises the <see cref="MessageReceived"/> event.
+        /// </summary>
         protected virtual void OnMessageReceived(MessageReceivedEventArgs e)
         {
             MessageReceived?.Invoke(this, e);

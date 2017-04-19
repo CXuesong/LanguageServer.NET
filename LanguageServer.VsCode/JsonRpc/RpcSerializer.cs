@@ -37,6 +37,15 @@ namespace LanguageServer.VsCode.JsonRpc
             return message;
         }
 
+        internal static string SerializeMessage(Message message)
+        {
+            using (var writer = new StringWriter())
+            {
+                SerializeMessage(writer, message);
+                return writer.ToString();
+            }
+        }
+
         internal static void SerializeMessage(TextWriter writer, Message message)
         {
             using (var jwriter = new JsonTextWriter(writer))

@@ -2,75 +2,90 @@
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace LanguageServer.VsCode.JsonRpc
 {
     /// <summary>
-    /// Error codes defined by the JSON-RPC 2.0 specification.
+    /// Error codes, including those who are defined by the JSON-RPC 2.0 specification.
     /// </summary>
     public enum ErrorCode
     {
         /// <summary>
-        /// Internal JSON-RPC error.
+        /// Internal JSON-RPC error. (JSON-RPC)
         /// </summary>
         InternalError = -32603,
 
         /// <summary>
-        /// Invalid method parameter(s).
+        /// Invalid method parameter(s). (JSON-RPC)
         /// </summary>
         InvalidParams = -32602,
 
         /// <summary>
-        /// The JSON sent is not a valid Request object.
+        /// The JSON sent is not a valid Request object. (JSON-RPC)
         /// </summary>
         InvalidRequest = -32600,
 
         /// <summary>
-        /// The method does not exist / is not available.
+        /// The method does not exist / is not available. (JSON-RPC)
         /// </summary>
         MethodNotFound = -32601,
 
         /// <summary>
-        /// Invalid JSON was received by the server. An error occurred on the server while parsing the JSON text.
+        /// Invalid JSON was received by the server. An error occurred on the server while parsing the JSON text. (JSON-RPC)
         /// </summary>
         ParseError = -32700,
 
         /// <summary>
-        /// Defined by the protocol. The request has been cancelled.
+        /// Defined by the protocol. The request has been cancelled. (JSON-RPC)
         /// </summary>
         RequestCancelled = -32800,
+
+        /// <summary>
+        /// There is unhandled CLR exception occurred during the process of request.
+        /// </summary>
+        UnhandledClrException = 1000,
     }
 
-    /// <summary>
-    /// Exposes basic, non-generic members of a response error.
-    /// </summary>
-    /// <remarks>It's recommended that you use or derive from <see cref="ResponseError{T}"/>
-    /// instead of implementing the interface by yourself.</remarks>
-    public interface IResponseError
+    [JsonObject(MemberSerialization.OptIn)]
+    public class ResponseError
     {
-        ErrorCode Code { get; set; }
+        public ResponseError(ErrorCode code, string message) : this(code, message, null)
+        {
+        }
 
-        string Message { get; set; }
+        public ResponseError(ErrorCode code, string message, object data)
+        {
+            Code = code;
+            Message = message;
+            SetData(data);
+        }
 
-        object Data { get; set; }
-    }
-
-    [JsonObject]
-    public class ResponseError<T> : IResponseError
-    {
         [JsonProperty]
         public ErrorCode Code { get; set; }
 
         [JsonProperty]
         public string Message { get; set; }
 
+        /// <summary>
+        /// A <see cref="JToken" /> representing parameters for the method.
+        /// </summary>
         [JsonProperty]
-        public T Data { get; set; }
+        public JToken Data { get; set; }
 
-        object IResponseError.Data
+        public object GetData(Type DataType)
         {
-            get => Data;
-            set => Data = (T) value;
+            return Data?.ToObject(DataType, RpcSerializer.Serializer);
+        }
+
+        public T GetData<T>()
+        {
+            return Data == null ? default(T) : Data.ToObject<T>(RpcSerializer.Serializer);
+        }
+
+        public void SetData(object newData)
+        {
+            Data = newData == null ? null : JToken.FromObject(newData, RpcSerializer.Serializer);
         }
     }
 }

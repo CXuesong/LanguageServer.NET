@@ -147,7 +147,7 @@ namespace LanguageServer.VsCode.JsonRpc
         /// <summary>
         /// Creates a new <see cref="ResponseMessage" /> instance.
         /// </summary>
-        public ResponseMessage(int id, object result, IResponseError error)
+        public ResponseMessage(int id, object result, ResponseError error)
         {
             Id = id;
             SetResult(result);
@@ -164,7 +164,7 @@ namespace LanguageServer.VsCode.JsonRpc
         /// The error that occurred while processing the request.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public IResponseError Error { get; set; }
+        public ResponseError Error { get; set; }
 
         /// <summary>
         /// An object representing the result of processing the request.
@@ -203,20 +203,37 @@ namespace LanguageServer.VsCode.JsonRpc
 
         public object Response { get; set; }
 
-        public IResponseError ResponseError { get; set; }
+        public ResponseError ResponseError { get; set; }
 
         internal ResponseMessage CreateResponseMessage(Exception ex)
         {
             var request = Message as RequestMessage;
+            ResponseError error = ResponseError;
             Debug.Assert(request != null);
-            return new ResponseMessage(request.Id, Response, ResponseError);
+            if (error == null && ex != null)
+            {
+                error = new ResponseError(ErrorCode.UnhandledClrException, ex.Message);
+#if DEBUG
+                error.SetData(new {StackTrace = ex.StackTrace});
+#endif
+            }
+            return new ResponseMessage(request.Id, Response, error);
         }
     }
 
     public interface IConnection
     {
+        /// <summary>
+        /// Raises when a message has been received.
+        /// </summary>
+        /// <remarks>This event is used to transform the "push" mode provided by <see cref="MessageReader"/> into "push" mode.</remarks>
         event EventHandler<MessageReceivedEventArgs> MessageReceived;
 
+        /// <summary>
+        /// Start listen with the given message reader and writer.
+        /// </summary>
+        /// <param name="millisecondsTimeout">Listens for the specified time.
+        /// If set to -1, listens until <see cref="StopListening"/> is called.</param>
         void Listen(int millisecondsTimeout);
 
         void StopListening();

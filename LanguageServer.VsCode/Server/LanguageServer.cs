@@ -15,6 +15,7 @@ namespace LanguageServer.VsCode.Server
             if (connection == null) throw new ArgumentNullException(nameof(connection));
             Connection = connection;
             Connection.MessageReceived += MessageSource_MessageReceived;
+            RegisterGeneralMessages();
         }
 
         private static Func<GeneralRequestMessage, object> CreateHandler<TEventArgs>(
