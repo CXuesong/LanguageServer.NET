@@ -160,6 +160,8 @@ namespace LanguageServer.VsCode.JsonRpc
         [JsonProperty]
         public int Id { get; set; }
 
+        // TODO a response should EITHER contain result or error node, not BOTH.
+
         /// <summary>
         /// The error that occurred while processing the request.
         /// </summary>
@@ -169,7 +171,7 @@ namespace LanguageServer.VsCode.JsonRpc
         /// <summary>
         /// An object representing the result of processing the request.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty]
         public JToken Result { get; set; }
 
         public object GetResult(Type resultType)
@@ -212,7 +214,7 @@ namespace LanguageServer.VsCode.JsonRpc
             Debug.Assert(request != null);
             if (error == null && ex != null)
             {
-                error = new ResponseError(ErrorCode.UnhandledClrException, ex.Message);
+                error = new ResponseError(ErrorCode.UnhandledClrException, ex.GetType() + ": " + ex.Message);
 #if DEBUG
                 error.SetData(new {StackTrace = ex.StackTrace});
 #endif

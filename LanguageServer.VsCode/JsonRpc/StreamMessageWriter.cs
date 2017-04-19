@@ -8,12 +8,14 @@ namespace LanguageServer.VsCode.JsonRpc
 {
     public class StreamMessageWriter : MessageWriter
     {
+        private static readonly UTF8Encoding UTF8NoBom = new UTF8Encoding(false, true);
+
         public StreamMessageWriter(Stream stream)
-            : this(stream, Encoding.UTF8, null)
+            : this(stream, UTF8NoBom, null)
         {
         }
 
-        public StreamMessageWriter(Stream stream, IStreamMessageLogger messageLogger) : this(stream, Encoding.UTF8, messageLogger)
+        public StreamMessageWriter(Stream stream, IStreamMessageLogger messageLogger) : this(stream, UTF8NoBom, messageLogger)
         {
         }
 
@@ -55,6 +57,7 @@ namespace LanguageServer.VsCode.JsonRpc
                     writer.Write(ms.Length);
                     writer.Write("\r\nContent-Type: application/vscode-jsonrpc; charset=utf8\r\n\r\n");
                 }
+                ms.Seek(0, SeekOrigin.Begin);
                 ms.CopyTo(BaseStream);
             }
         }
