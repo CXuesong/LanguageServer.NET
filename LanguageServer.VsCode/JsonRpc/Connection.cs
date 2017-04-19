@@ -1,10 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace LanguageServer.VsCode.JsonRpc
 {
-    public class Connection : IMessageSource
+    public class Connection : IConnection
     {
         private readonly MessageReader _MessageReader;
         private readonly MessageWriter _MessageWriter;
@@ -20,6 +21,24 @@ namespace LanguageServer.VsCode.JsonRpc
             if (messageWriter == null) throw new ArgumentNullException(nameof(messageWriter));
             _MessageReader = messageReader;
             _MessageWriter = messageWriter;
+        }
+
+        /// <summary>
+        /// Creates a <see cref="Connection"/> from <see cref="Stream"/>s.
+        /// </summary>
+        public static Connection FromStreams(Stream inStream, Stream outStream)
+        {
+            return FromStreams(inStream, outStream, null);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="Connection"/> from <see cref="Stream"/>s.
+        /// </summary>
+        public static Connection FromStreams(Stream inStream, Stream outStream, IStreamMessageLogger logger)
+        {
+            if (inStream == null) throw new ArgumentNullException(nameof(inStream));
+            if (outStream == null) throw new ArgumentNullException(nameof(outStream));
+            return new Connection(new StreamMessageReader(inStream, logger), new StreamMessageWriter(outStream));
         }
 
         /// <summary>
@@ -56,10 +75,18 @@ namespace LanguageServer.VsCode.JsonRpc
                     {
                         var message = _MessageReader.Read();
                         var e = new MessageReceivedEventArgs(message);
-                        OnMessageReceived(e);
-                        if (e.Response != null)
+                        Exception handlerException = null;
+                        try
                         {
-                            _MessageWriter.Write(e.Response);
+                            OnMessageReceived(e);
+                        }
+                        catch (Exception ex)
+                        {
+                            handlerException = ex;
+                        }
+                        if (e.Message is RequestMessage)
+                        {
+                            _MessageWriter.Write(e.CreateResponseMessage(handlerException));
                         }
                     }
                     catch (TaskCanceledException)
