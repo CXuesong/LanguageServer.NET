@@ -111,6 +111,9 @@ namespace LanguageServer.VsCode.Contracts
         public int Character { get; set; }
 
         /// <inheritdoc />
+        public override string ToString() => $"({Line},{Character})";
+
+        /// <inheritdoc />
         public bool Equals(Position other)
         {
             return Character == other.Character && Line == other.Line;

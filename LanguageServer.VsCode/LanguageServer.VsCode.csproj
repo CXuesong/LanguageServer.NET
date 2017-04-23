@@ -22,12 +22,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="JsonRpc\_private\**" />
-    <EmbeddedResource Remove="JsonRpc\_private\**" />
-    <None Remove="JsonRpc\_private\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
   </ItemGroup>
 

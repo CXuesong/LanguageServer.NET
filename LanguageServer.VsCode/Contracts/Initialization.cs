@@ -1,64 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using LanguageServer.VsCode.JsonRpc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace LanguageServer.VsCode.Server
+namespace LanguageServer.VsCode.Contracts
 {
-
-    public enum TraceLevel
-    {
-        Off = 0,
-        Messages,
-        Verbose
-    }
-
-    public class InitializingEventArgs : GeneralRequestEventArgs
-    {
-        public InitializingEventArgs(int processId, Uri rootUri, JToken initializationOptions,
-            ClientCapabilities capabilities)
-        {
-            ProcessId = processId;
-            RootUri = rootUri;
-            InitializationOptions = initializationOptions;
-            ClientCapabilities = capabilities;
-            ServerCapabilities = new ServerCapabilities();
-        }
-
-        /// <summary>
-        /// The process Id of the parent process that started the server.
-        /// </summary>
-        [JsonProperty]
-        public int ProcessId { get; }
-
-        /// <summary>
-        /// The root path of the workspace. Is null if no folder is open.
-        /// </summary>
-        [JsonProperty]
-        public Uri RootUri { get; }
-
-        /// <summary>
-        /// User provided initialization options.
-        /// </summary>
-        [JsonProperty]
-        public JToken InitializationOptions { get; }
-
-        /// <summary>
-        /// The capabilities provided by the client (editor).
-        /// </summary>
-        [JsonProperty]
-        public ClientCapabilities ClientCapabilities { get; }
-
-        /// <summary>
-        /// The capabilities provided by the language server.
-        /// </summary>
-        [JsonProperty]
-        public ServerCapabilities ServerCapabilities { get; set; }
-
-    }
-
     /// <summary>
     /// Defines the capabilities provided by the client.
     /// </summary>

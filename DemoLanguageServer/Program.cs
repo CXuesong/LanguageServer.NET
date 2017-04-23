@@ -1,13 +1,15 @@
 ﻿//#define WAIT_FOR_DEBUGGER
-#define USE_CONSOLE_READER
+//#define USE_CONSOLE_READER
 
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
+using System.Text;
 using System.Threading;
-using LanguageServer.VsCode.JsonRpc;
-using LanguageServer.VsCode.Server;
-using LangServer = LanguageServer.VsCode.Server.LanguageServer;
+using JsonRpc.Standard;
+using JsonRpc.Standard.Contracts;
+using JsonRpc.Standard.Server;
 
 namespace DemoLanguageServer
 {
@@ -19,21 +21,30 @@ namespace DemoLanguageServer
             while (!Debugger.IsAttached) Thread.Sleep(1000);
             Debugger.Break();
 #endif
+            var rpcResolver = new RpcMethodResolver();
+            rpcResolver.Register(typeof(Program).GetTypeInfo().Assembly);
             using (var cin = Console.OpenStandardInput())
             using (var cout = Console.OpenStandardOutput())
+            using (var bcin = new BufferedStream(cin))
             using (var logWriter = File.CreateText("messages-" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".log"))
             {
                 logWriter.AutoFlush = true;
+                var sml = new MyStreamMessageLogger(logWriter);
+                var writer = new PartwiseStreamMessageWriter(cout, sml);
 #if USE_CONSOLE_READER
-                var connection = new Connection(new ConsoleMessageReader(),
-                    new StreamMessageWriter(cout, new MyStreamMessageLogger(logWriter)));
-#else
-                var connection = Connection.FromStreams(cin, cout, new MyStreamMessageLogger(logWriter));
-#endif
-                using (var server = new LangServer(connection))
+                using (var inreader = new StreamReader(bcin, Encoding.UTF8, false, 4096, true))
                 {
-                    server.Start();
+                    var reader = new ByLineTextMessageReader(inreader);
+#else
+                {
+                    var reader = new PartwiseStreamMessageReader(bcin, sml);
+
+#endif
+                    var host = new JsonRpcServiceHost(reader, writer, rpcResolver,
+                        JsonRpcServiceHostOptions.ConsistentResponseSequence);
+                    host.RunAsync().Wait();
                 }
+                logWriter.WriteLine("Exited");
             }
         }
     }
