@@ -8,7 +8,7 @@ namespace DemoLanguageServer.Services
 {
     public class InitializaionService : JsonRpcService
     {
-        [JsonRpcMethod]
+        [JsonRpcMethod(AllowExtensionData = true)]
         public object Initialize(int processId, Uri rootUri, ClientCapabilities capabilities,
             JToken initializationOptions = null, string trace = null)
         {
@@ -21,7 +21,6 @@ namespace DemoLanguageServer.Services
             
         }
 
-
         [JsonRpcMethod]
         public void Shutdown()
         {
@@ -31,7 +30,7 @@ namespace DemoLanguageServer.Services
         [JsonRpcMethod]
         public void Exit()
         {
-            RequestContext.Host.Stop();
+            ((MySession)RequestContext.Session).StopServer();
         }
     }
 }

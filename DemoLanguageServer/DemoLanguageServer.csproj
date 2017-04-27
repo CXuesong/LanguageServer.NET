@@ -6,7 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CXuesong.JsonRpc.Standard" Version="0.1.0-int1" />
+    <Compile Remove="_private\**" />
+    <EmbeddedResource Remove="_private\**" />
+    <None Remove="_private\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CXuesong.JsonRpc.Standard" Version="0.2.0-int1" />
     <PackageReference Include="System.Diagnostics.TraceSource" Version="4.3.0" />
   </ItemGroup>
 

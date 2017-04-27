@@ -9,11 +9,12 @@ using System.Text;
 using System.Threading;
 using JsonRpc.Standard;
 using JsonRpc.Standard.Contracts;
+using JsonRpc.Standard.Dataflow;
 using JsonRpc.Standard.Server;
 
 namespace DemoLanguageServer
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
@@ -21,56 +22,69 @@ namespace DemoLanguageServer
             while (!Debugger.IsAttached) Thread.Sleep(1000);
             Debugger.Break();
 #endif
-            var rpcResolver = new RpcMethodResolver();
-            rpcResolver.Register(typeof(Program).GetTypeInfo().Assembly);
-            using (var cin = Console.OpenStandardInput())
-            using (var cout = Console.OpenStandardOutput())
-            using (var bcin = new BufferedStream(cin))
             using (var logWriter = File.CreateText("messages-" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".log"))
+#if !USE_CONSOLE_READER
+            using (var cin = Console.OpenStandardInput())
+            using (var bcin = new BufferedStream(cin))
+#endif
+            using (var cout = Console.OpenStandardOutput())
             {
                 logWriter.AutoFlush = true;
-                var sml = new MyStreamMessageLogger(logWriter);
-                var writer = new PartwiseStreamMessageWriter(cout, sml);
+                // Configure & build service host
+                var session = new MySession();
+                var host = BuildServiceHost(session, logWriter);
+                // Connect the datablocks
+                var target = new PartwiseStreamMessageTargetBlock(cout);
 #if USE_CONSOLE_READER
-                using (var inreader = new StreamReader(bcin, Encoding.UTF8, false, 4096, true))
-                {
-                    var reader = new ByLineTextMessageReader(inreader);
-#else
-                {
-                    var reader = new PartwiseStreamMessageReader(bcin, sml);
 
+                var source = new ByLineTextMessageSourceBlock(Console.In);
+#else
+                var source = new PartwiseStreamMessageSourceBlock(bcin);
 #endif
-                    var host = new JsonRpcServiceHost(reader, writer, rpcResolver,
-                        JsonRpcServiceHostOptions.ConsistentResponseSequence);
-                    host.RunAsync().Wait();
+                // If we want server to stop, just stop the source
+                using (host.Attach(source, target))
+                using (session.CancellationToken.Register(() => source.Complete()))
+                {
+                    session.CancellationToken.WaitHandle.WaitOne();
                 }
                 logWriter.WriteLine("Exited");
             }
         }
+
+        private static IJsonRpcServiceHost BuildServiceHost(ISession session, TextWriter logWriter)
+        {
+            var builder = new ServiceHostBuilder
+            {
+                ContractResolver = new JsonRpcContractResolver
+                {
+                    NamingStrategy = JsonRpcNamingStrategies.CamelCase,
+                    ParameterValueConverter = JsonValueConverters.CamelCase,
+                },
+                Session = session,
+                Options = JsonRpcServiceHostOptions.ConsistentResponseSequence,
+            };
+            builder.Register(typeof(Program).GetTypeInfo().Assembly);
+            builder.Intercept(async (context, next) =>
+            {
+                logWriter.WriteLine("> {0}", context.Request);
+                await next();
+                logWriter.WriteLine("< {0}", context.Response);
+            });
+            return builder.Build();
+        }
+        
     }
 
-    class MyStreamMessageLogger : IStreamMessageLogger
+    class MySession : Session
     {
-        public TextWriter Writer { get; }
+        private readonly CancellationTokenSource cts = new CancellationTokenSource();
 
-        public MyStreamMessageLogger(TextWriter writer)
-        {
-            if (writer == null) throw new ArgumentNullException(nameof(writer));
-            Writer = writer;
-        }
+        public CancellationToken CancellationToken => cts.Token;
 
-        /// <inheritdoc />
-        public void NotifyMessageSent(string content)
+        public void StopServer()
         {
-            Writer.Write("< ");
-            Writer.WriteLine(content);
+            cts.Cancel();
         }
-
-        /// <inheritdoc />
-        public void NotifyMessageReceived(string content)
-        {
-            Writer.Write("> ");
-            Writer.WriteLine(content);
-        }
+        
     }
 }
