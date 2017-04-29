@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using LanguageServer.VsCode.JsonRpc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

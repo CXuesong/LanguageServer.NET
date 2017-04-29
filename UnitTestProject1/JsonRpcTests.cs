@@ -1,5 +1,4 @@
 ﻿using System;
-using LanguageServer.VsCode.JsonRpc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static UnitTestProject1.Utility;
 
