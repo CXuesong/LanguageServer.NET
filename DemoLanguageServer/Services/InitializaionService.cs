@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 using JsonRpc.Standard.Contracts;
 using JsonRpc.Standard.Server;
 using LanguageServer.VsCode.Contracts;
+using LanguageServer.VsCode.Contracts.Client;
 using Newtonsoft.Json.Linq;
 
 namespace DemoLanguageServer.Services
@@ -18,9 +20,11 @@ namespace DemoLanguageServer.Services
         }
 
         [JsonRpcMethod]
-        public void Initialized()
+        public async Task Initialized()
         {
-
+            await Session.ClientWindow.ShowMessage(MessageType.Info, "Hello from language server.");
+            var choice = await Session.ClientWindow.ShowMessage(MessageType.Warning, "Wanna drink?", "Yes", "No");
+            await Session.ClientWindow.ShowMessage(MessageType.Info, $"You chose {choice}.");
         }
 
         [JsonRpcMethod]

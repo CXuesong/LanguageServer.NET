@@ -1,4 +1,4 @@
-﻿#define WAIT_FOR_DEBUGGER
+﻿//#define WAIT_FOR_DEBUGGER
 //#define USE_CONSOLE_READER
 
 using System;
@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using JsonRpc.Standard;
+using JsonRpc.Standard.Client;
 using JsonRpc.Standard.Contracts;
 using JsonRpc.Standard.Dataflow;
 using JsonRpc.Standard.Server;
@@ -30,9 +31,15 @@ namespace DemoLanguageServer
             using (var cout = Console.OpenStandardOutput())
             {
                 logWriter.AutoFlush = true;
+                var contractResolver = new JsonRpcContractResolver
+                {
+                    NamingStrategy = new CamelCaseJsonRpcNamingStrategy(),
+                    ParameterValueConverter = new CamelCaseJsonValueConverter(),
+                };
+                var client = new JsonRpcClient();
                 // Configure & build service host
-                var session = new LanguageServerSession();
-                var host = BuildServiceHost(session, logWriter);
+                var session = new LanguageServerSession(client, contractResolver);
+                var host = BuildServiceHost(session, logWriter, contractResolver);
                 // Connect the datablocks
                 var target = new PartwiseStreamMessageTargetBlock(cout);
 #if USE_CONSOLE_READER
@@ -43,6 +50,7 @@ namespace DemoLanguageServer
 #endif
                 // If we want server to stop, just stop the source
                 using (host.Attach(source, target))
+                using (client.Attach(source, target))
                 using (session.CancellationToken.Register(() => source.Complete()))
                 {
                     session.CancellationToken.WaitHandle.WaitOne();
@@ -51,15 +59,11 @@ namespace DemoLanguageServer
             }
         }
 
-        private static IJsonRpcServiceHost BuildServiceHost(ISession session, TextWriter logWriter)
+        private static IJsonRpcServiceHost BuildServiceHost(ISession session, TextWriter logWriter, IJsonRpcContractResolver contractResolver)
         {
             var builder = new ServiceHostBuilder
             {
-                ContractResolver = new JsonRpcContractResolver
-                {
-                    NamingStrategy = new CamelCaseJsonRpcNamingStrategy(),
-                    ParameterValueConverter = new CamelCaseJsonValueConverter(),
-                },
+                ContractResolver = contractResolver,
                 Session = session,
                 Options = JsonRpcServiceHostOptions.ConsistentResponseSequence,
             };
