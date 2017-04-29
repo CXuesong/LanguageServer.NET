@@ -8,9 +8,10 @@ using LanguageServer.VsCode.Contracts;
 
 namespace DemoLanguageServer.Services
 {
+    [JsonRpcScope(MethodPrefix = "textDocument/")]
     public class TextDocumentService : JsonRpcService
     {
-        [JsonRpcMethod("textDocument/hover")]
+        [JsonRpcMethod]
         public async Task<Hover> Hover(TextDocumentIdentifier textDocument, Position position)
         {
             await Task.Delay(1000);

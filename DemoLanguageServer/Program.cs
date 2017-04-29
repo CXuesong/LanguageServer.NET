@@ -1,4 +1,4 @@
-﻿//#define WAIT_FOR_DEBUGGER
+﻿#define WAIT_FOR_DEBUGGER
 //#define USE_CONSOLE_READER
 
 using System;
@@ -31,7 +31,7 @@ namespace DemoLanguageServer
             {
                 logWriter.AutoFlush = true;
                 // Configure & build service host
-                var session = new MySession();
+                var session = new LanguageServerSession();
                 var host = BuildServiceHost(session, logWriter);
                 // Connect the datablocks
                 var target = new PartwiseStreamMessageTargetBlock(cout);
@@ -57,8 +57,8 @@ namespace DemoLanguageServer
             {
                 ContractResolver = new JsonRpcContractResolver
                 {
-                    NamingStrategy = JsonRpcNamingStrategies.CamelCase,
-                    ParameterValueConverter = JsonValueConverters.CamelCase,
+                    NamingStrategy = new CamelCaseJsonRpcNamingStrategy(),
+                    ParameterValueConverter = new CamelCaseJsonValueConverter(),
                 },
                 Session = session,
                 Options = JsonRpcServiceHostOptions.ConsistentResponseSequence,
@@ -71,19 +71,6 @@ namespace DemoLanguageServer
                 logWriter.WriteLine("< {0}", context.Response);
             });
             return builder.Build();
-        }
-        
-    }
-
-    class MySession : Session
-    {
-        private readonly CancellationTokenSource cts = new CancellationTokenSource();
-
-        public CancellationToken CancellationToken => cts.Token;
-
-        public void StopServer()
-        {
-            cts.Cancel();
         }
         
     }

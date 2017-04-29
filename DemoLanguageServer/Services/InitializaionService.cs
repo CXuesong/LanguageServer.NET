@@ -8,6 +8,8 @@ namespace DemoLanguageServer.Services
 {
     public class InitializaionService : JsonRpcService
     {
+        protected LanguageServerSession Session => (LanguageServerSession) RequestContext.Session;
+
         [JsonRpcMethod(AllowExtensionData = true)]
         public object Initialize(int processId, Uri rootUri, ClientCapabilities capabilities,
             JToken initializationOptions = null, string trace = null)
@@ -18,7 +20,7 @@ namespace DemoLanguageServer.Services
         [JsonRpcMethod]
         public void Initialized()
         {
-            
+
         }
 
         [JsonRpcMethod]
@@ -30,7 +32,7 @@ namespace DemoLanguageServer.Services
         [JsonRpcMethod]
         public void Exit()
         {
-            ((MySession)RequestContext.Session).StopServer();
+            Session.StopServer();
         }
     }
 }
