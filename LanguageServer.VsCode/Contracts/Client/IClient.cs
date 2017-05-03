@@ -139,11 +139,13 @@ namespace LanguageServer.VsCode.Contracts.Client
         /// Not all clients need to support dynamic capability registration.
         /// A client opts in via the ClientCapabilities.dynamicRegistration property.
         /// </summary>
+        [JsonRpcMethod]
         void RegisterCapability(IEnumerable<Registration> registrations);
 
         /// <summary>
         /// Unregisters a previously registered capability.
         /// </summary>
+        [JsonRpcMethod]
         void UnregisterCapability(IEnumerable<Unregistration> unregisterations);
     }
 }
