@@ -38,7 +38,7 @@ namespace LanguageServer.VsCode.Contracts.Client
         /// <param name="message">The actual message.</param>
         /// <param name="actions">The message action items to present.</param>
         [JsonRpcMethod("showMessageRequest")]
-        Task<MessageActionItem> ShowMessage(MessageType type, string message, params MessageActionItem[] actions);
+        Task<MessageActionItem?> ShowMessage(MessageType type, string message, params MessageActionItem[] actions);
 
         /// <summary>
         /// The log message notification is sent from the server to the client to ask the client to log a particular message.
