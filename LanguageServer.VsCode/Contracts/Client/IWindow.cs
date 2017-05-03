@@ -116,7 +116,8 @@ namespace LanguageServer.VsCode.Contracts.Client
     public interface IWindow
     {
         /// <summary>
-        /// The show message notification is sent from a server to a client to ask the client to display a particular message in the user interface.
+        /// The show message notification is sent from a server to a client to ask the client to display
+        /// a particular message in the user interface.
         /// </summary>
         /// <param name="type">The message type.</param>
         /// <param name="message">The actual message.</param>
