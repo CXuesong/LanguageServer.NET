@@ -1,10 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using JsonRpc.Standard;
 using Newtonsoft.Json;
 
 namespace LanguageServer.VsCode.Contracts
 {
+
+    /// <summary>
+    /// The response for <c>initialize</c> request.
+    /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
+    public class InitializeResult
+    {
+        public InitializeResult() : this(null)
+        {
+        }
+
+        public InitializeResult(ServerCapabilities capabilities)
+        {
+            Capabilities = capabilities;
+        }
+
+        /// <summary>
+        /// The capabilities the language server provides.
+        /// </summary>
+        [JsonProperty]
+        public ServerCapabilities Capabilities { get; set; }
+    }
+
+    /// <summary>
+    /// The error response for <c>initialize</c> request. (Set this object to <see cref="ResponseError.Data"/>.)
+    /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
+    public class InitializeError
+    {
+        /// <summary>
+        /// Indicates whether the client execute the retry logic as described in the "remarks" section.
+        /// </summary>
+        /// <remarks>
+        /// The retry logic is as follows:
+        /// <list type="number">
+        /// <item><description>show the message provided by the ResponseError to the user</description></item>
+        /// <item><description>user selects retry or cancel</description></item>
+        /// <item><description>if user selected retry the initialize method is sent again.</description></item>
+        /// </list>
+        /// </remarks>
+        [JsonProperty]
+        public bool Retry { get; set; }
+    }
 
     /// <summary>
     /// Signature help options.
@@ -133,8 +177,19 @@ namespace LanguageServer.VsCode.Contracts
     /// </summary>
     public enum TextDocumentSyncKind
     {
+        /// <summary>
+        /// Documents should not be synced at all.
+        /// </summary>
         None = 0,
+        /// <summary>
+        /// Documents are synced by always sending the full content
+        /// of the document.
+        /// </summary>
         Full = 1,
+        /// <summary>
+        /// Documents are synced by sending the full content on open.
+        /// After that only incremental updates to the document are send.
+        /// </summary>
         Incremental = 2
     }
 
@@ -151,11 +206,13 @@ namespace LanguageServer.VsCode.Contracts
         /// Change notificatins are sent to the server. See TextDocumentSyncKind.None, TextDocumentSyncKind.Full
         /// and TextDocumentSyncKind.Incremental.
         /// </summary>
+        [JsonProperty]
         public TextDocumentSyncKind Change { get; set; }
 
         /// <summary>
         /// Will save notifications are sent to the server.
         /// </summary>
+        [JsonProperty]
         public bool WillSave { get; set; }
 
         /// <summary>
@@ -167,6 +224,7 @@ namespace LanguageServer.VsCode.Contracts
         /// <summary>
         /// Save notifications are sent to the server.
         /// </summary>
+        [JsonProperty]
         private SaveEventOptions Save { get; set; }
     }
 
@@ -189,6 +247,7 @@ namespace LanguageServer.VsCode.Contracts
         /// <summary>
         /// The client is supposed to include the content on save.
         /// </summary>
+        [JsonProperty]
         public bool IncludeText { get; set; }
     }
 }
