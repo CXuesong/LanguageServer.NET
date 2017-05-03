@@ -69,29 +69,6 @@ namespace DemoLanguageServer
             }
         }
 
-        // DON'T USE IT. IT MAY SCREW UP.
-        //private static ISourceBlock<T> Intercept<T>(this ISourceBlock<T> source, Action<T> action)
-        //{
-        //    var block = new TransformBlock<T, T>(i =>
-        //    {
-        //        action(i);
-        //        return i;
-        //    });
-        //    source.LinkTo(block);
-        //    return source;
-        //}
-
-        //private static ITargetBlock<T> Intercept<T>(this ITargetBlock<T> target, Action<T> action)
-        //{
-        //    var block = new TransformBlock<T, T>(i =>
-        //    {
-        //        action(i);
-        //        return i;
-        //    });
-        //    block.LinkTo(target);
-        //    return block;
-        //}
-
         private static IJsonRpcServiceHost BuildServiceHost(ISession session, TextWriter logWriter, IJsonRpcContractResolver contractResolver)
         {
             var builder = new ServiceHostBuilder

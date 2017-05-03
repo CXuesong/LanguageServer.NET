@@ -4,6 +4,7 @@ using JsonRpc.Standard.Client;
 using JsonRpc.Standard.Contracts;
 using JsonRpc.Standard.Server;
 using LanguageServer.VsCode.Contracts.Client;
+using LanguageServer.VsCode.Server;
 
 namespace DemoLanguageServer
 {
@@ -17,6 +18,7 @@ namespace DemoLanguageServer
             RpcClient = rpcClient;
             var builder = new JsonRpcProxyBuilder {ContractResolver = contractResolver};
             Client = new ClientProxy(builder, rpcClient);
+            Documents = new TextDocumentCollection();
         }
 
         public CancellationToken CancellationToken => cts.Token;
@@ -24,6 +26,8 @@ namespace DemoLanguageServer
         public JsonRpcClient RpcClient { get; }
 
         public ClientProxy Client { get; }
+
+        public TextDocumentCollection Documents { get; }
 
         public void StopServer()
         {

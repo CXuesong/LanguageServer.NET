@@ -225,7 +225,7 @@ namespace LanguageServer.VsCode.Contracts
         /// Save notifications are sent to the server.
         /// </summary>
         [JsonProperty]
-        private SaveEventOptions Save { get; set; }
+        public SaveEventOptions Save { get; set; }
     }
 
     /// <summary>

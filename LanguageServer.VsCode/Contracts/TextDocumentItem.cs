@@ -28,13 +28,17 @@ namespace LanguageServer.VsCode.Contracts
         public int Version { get; set; }
     }
 
-    // TODO IEquatable
     /// <summary>
     /// Text documents are identified using a URI. 
     /// </summary>
     public struct TextDocumentIdentifier : IEquatable<TextDocumentIdentifier>
     {
-        public Uri Uri { get; set; }
+        public TextDocumentIdentifier(Uri uri)
+        {
+            Uri = uri;
+        }
+
+        public Uri Uri { get; }
 
         /// <inheritdoc />
         public override string ToString() => Uri?.ToString();
@@ -72,12 +76,40 @@ namespace LanguageServer.VsCode.Contracts
     /// <summary>
     /// An identifier to denote a specific version of a text document.
     /// </summary>
-    public class VersionedTextDocumentIdentifier
+    public struct VersionedTextDocumentIdentifier : IEquatable<VersionedTextDocumentIdentifier>
     {
-        public Uri Uri { get; set; }
+        public VersionedTextDocumentIdentifier(Uri uri, int version)
+        {
+            Uri = uri;
+            Version = version;
+        }
 
-        public int Version { get; set; }
+        public Uri Uri { get; }
+
+        public int Version { get; }
 
         public override string ToString() => $"{Uri}({Version})";
+
+        /// <inheritdoc />
+        public bool Equals(VersionedTextDocumentIdentifier other)
+        {
+            return Equals(Uri, other.Uri) && Version == other.Version;
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is VersionedTextDocumentIdentifier && Equals((VersionedTextDocumentIdentifier) obj);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((Uri != null ? Uri.GetHashCode() : 0) * 397) ^ Version;
+            }
+        }
     }
 }

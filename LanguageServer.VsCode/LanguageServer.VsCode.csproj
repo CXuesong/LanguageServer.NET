@@ -22,6 +22,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Server\_private\**" />
+    <EmbeddedResource Remove="Server\_private\**" />
+    <None Remove="Server\_private\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CXuesong.JsonRpc.Standard" Version="0.2.0-int3" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
   </ItemGroup>
