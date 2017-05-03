@@ -16,14 +16,14 @@ namespace DemoLanguageServer
             if (rpcClient == null) throw new ArgumentNullException(nameof(rpcClient));
             RpcClient = rpcClient;
             var builder = new JsonRpcProxyBuilder {ContractResolver = contractResolver};
-            ClientWindow = builder.CreateProxy<IWindow>(rpcClient);
+            Client = new ClientProxy(builder, rpcClient);
         }
 
         public CancellationToken CancellationToken => cts.Token;
 
         public JsonRpcClient RpcClient { get; }
 
-        public IWindow ClientWindow { get; }
+        public ClientProxy Client { get; }
 
         public void StopServer()
         {

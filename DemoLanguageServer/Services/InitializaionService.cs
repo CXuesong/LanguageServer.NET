@@ -12,19 +12,21 @@ namespace DemoLanguageServer.Services
     {
         protected LanguageServerSession Session => (LanguageServerSession) RequestContext.Session;
 
+        protected ClientProxy Client => Session.Client;
+
         [JsonRpcMethod(AllowExtensionData = true)]
-        public object Initialize(int processId, Uri rootUri, ClientCapabilities capabilities,
+        public InitializeResult Initialize(int processId, Uri rootUri, ClientCapabilities capabilities,
             JToken initializationOptions = null, string trace = null)
         {
-            return new {Capabilities = new ServerCapabilities {HoverProvider = true}};
+            return new InitializeResult(new ServerCapabilities {HoverProvider = true});
         }
 
         [JsonRpcMethod]
         public async Task Initialized()
         {
-            await Session.ClientWindow.ShowMessage(MessageType.Info, "Hello from language server.");
-            var choice = await Session.ClientWindow.ShowMessage(MessageType.Warning, "Wanna drink?", "Yes", "No");
-            await Session.ClientWindow.ShowMessage(MessageType.Info, $"You chose {choice}.");
+            await Client.Window.ShowMessage(MessageType.Info, "Hello from language server.");
+            var choice = await Client.Window.ShowMessage(MessageType.Warning, "Wanna drink?", "Yes", "No");
+            await Client.Window.ShowMessage(MessageType.Info, $"You chose {(string) choice ?? "Nothing"}.");
         }
 
         [JsonRpcMethod]

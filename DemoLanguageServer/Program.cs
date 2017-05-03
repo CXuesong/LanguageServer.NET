@@ -7,6 +7,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks.Dataflow;
 using JsonRpc.Standard;
 using JsonRpc.Standard.Client;
 using JsonRpc.Standard.Contracts;
@@ -37,6 +38,14 @@ namespace DemoLanguageServer
                     ParameterValueConverter = new CamelCaseJsonValueConverter(),
                 };
                 var client = new JsonRpcClient();
+                client.MessageSending += (_, e) =>
+                {
+                    lock (logWriter) logWriter.WriteLine("<C{0}", e.Message);
+                };
+                client.MessageReceiving += (_, e) =>
+                {
+                    lock (logWriter) logWriter.WriteLine(">C{0}", e.Message);
+                };
                 // Configure & build service host
                 var session = new LanguageServerSession(client, contractResolver);
                 var host = BuildServiceHost(session, logWriter, contractResolver);
@@ -48,9 +57,10 @@ namespace DemoLanguageServer
 #else
                 var source = new PartwiseStreamMessageSourceBlock(bcin);
 #endif
-                // If we want server to stop, just stop the source
                 using (host.Attach(source, target))
+                    // We want to capture log all the server-to-client calls as well
                 using (client.Attach(source, target))
+                    // If we want server to stop, just stop the "source"
                 using (session.CancellationToken.Register(() => source.Complete()))
                 {
                     session.CancellationToken.WaitHandle.WaitOne();
@@ -58,6 +68,29 @@ namespace DemoLanguageServer
                 logWriter.WriteLine("Exited");
             }
         }
+
+        // DON'T USE IT. IT MAY SCREW UP.
+        //private static ISourceBlock<T> Intercept<T>(this ISourceBlock<T> source, Action<T> action)
+        //{
+        //    var block = new TransformBlock<T, T>(i =>
+        //    {
+        //        action(i);
+        //        return i;
+        //    });
+        //    source.LinkTo(block);
+        //    return source;
+        //}
+
+        //private static ITargetBlock<T> Intercept<T>(this ITargetBlock<T> target, Action<T> action)
+        //{
+        //    var block = new TransformBlock<T, T>(i =>
+        //    {
+        //        action(i);
+        //        return i;
+        //    });
+        //    block.LinkTo(target);
+        //    return block;
+        //}
 
         private static IJsonRpcServiceHost BuildServiceHost(ISession session, TextWriter logWriter, IJsonRpcContractResolver contractResolver)
         {
@@ -68,11 +101,12 @@ namespace DemoLanguageServer
                 Options = JsonRpcServiceHostOptions.ConsistentResponseSequence,
             };
             builder.Register(typeof(Program).GetTypeInfo().Assembly);
+            // Log all the client-to-server calls.
             builder.Intercept(async (context, next) =>
             {
-                logWriter.WriteLine("> {0}", context.Request);
+                lock (logWriter) logWriter.WriteLine("> {0}", context.Request);
                 await next();
-                logWriter.WriteLine("< {0}", context.Response);
+                lock (logWriter) logWriter.WriteLine("< {0}", context.Response);
             });
             return builder.Build();
         }
