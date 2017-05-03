@@ -8,24 +8,24 @@ namespace LanguageServer.VsCode.Contracts.Client
 {
     public enum MessageType
     {
-        /**
- * An error message.
- */
+        /// <summary>
+        /// An error message.
+        /// </summary>
         Error = 1,
 
-        /**
-         * A warning message.
-         */
+        /// <summary>
+        /// A warning message.
+        /// </summary>
         Warning = 2,
 
-        /**
-         * An information message.
-         */
+        /// <summary>
+        /// An information message.
+        /// </summary>
         Info = 3,
 
-        /**
-         * A log message.
-         */
+        /// <summary>
+        /// A log message.
+        /// </summary>
         Log = 4,
     }
 
