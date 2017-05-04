@@ -225,21 +225,22 @@ namespace LanguageServer.VsCode.Contracts
         /// Save notifications are sent to the server.
         /// </summary>
         [JsonProperty]
-        public SaveEventOptions Save { get; set; }
+        public SaveOptions Save { get; set; }
     }
 
     /// <summary>
-    /// Save options. (export interface SaveOptions)
+    /// Save options.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public class SaveEventOptions
+    public class SaveOptions
     {
-        public SaveEventOptions()
+        [JsonConstructor]
+        public SaveOptions()
         {
 
         }
 
-        public SaveEventOptions(bool includeText)
+        public SaveOptions(bool includeText)
         {
             IncludeText = includeText;
         }

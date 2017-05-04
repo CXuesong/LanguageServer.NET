@@ -29,7 +29,20 @@ namespace DemoLanguageServer.Services
         public void DidChange(TextDocumentIdentifier textDocument,
             ICollection<TextDocumentContentChangeEvent> contentChanges)
         {
+            Documents[textDocument].ApplyChanges(contentChanges);
+        }
 
+        [JsonRpcMethod(IsNotification = true)]
+        public void WillSave(TextDocumentIdentifier textDocument, TextDocumentSaveReason reason)
+        {
+            Client.Window.LogMessage(MessageType.Log, "-----------");
+            Client.Window.LogMessage(MessageType.Log, Documents[textDocument].Content);
+        }
+
+        [JsonRpcMethod(IsNotification = true)]
+        public void DidClose(TextDocumentIdentifier textDocument)
+        {
+            Documents.Remove(textDocument);
         }
     }
 }

@@ -60,6 +60,38 @@ namespace LanguageServer.VsCode.Server
             Version = doc.Version;
         }
 
+        /// <summary>
+        /// Applies a series of <see cref="TextDocumentContentChangeEvent"/>s to the current document.
+        /// </summary>
+        /// <remarks>
+        /// The default implementation updates <see cref="Content"/> for each <see cref="TextDocumentContentChangeEvent"/>,
+        /// which may be inefficient.
+        /// </remarks>
+        public virtual void ApplyChanges(ICollection<TextDocumentContentChangeEvent> changes)
+        {
+            if (changes == null || changes.Count == 0) return;
+            string newContent = null;
+            foreach (var change in changes)
+            {
+                if (change.HasRange)
+                {
+                    // In case we need to evaluate offset
+                    if (newContent == null)
+                        newContent = Content;
+                    else
+                        Content = newContent;
+                    var start = OffsetAt(change.Range.Start);
+                    newContent = newContent.Substring(0, start) + change.Text +
+                                 newContent.Substring(start + change.RangeLength);
+                }
+                else
+                {
+                    newContent = change.Text;
+                }
+            }
+            Content = newContent;
+        }
+
         internal void AddOwner(TextDocumentCollection owner)
         {
             Debug.Assert(owner != null);

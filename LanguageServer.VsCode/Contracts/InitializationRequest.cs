@@ -265,7 +265,7 @@ namespace LanguageServer.VsCode.Contracts
     {
         /// <summary>
         /// Defines how text documents are synced. Is either a detailed structure defining each notification or
-        /// for backwards compatibility the TextDocumentSyncKind number.
+        /// for backwards compatibility the <see cref="TextDocumentSyncKind" /> number.
         /// </summary>
         public TextDocumentSyncOptions TextDocumentSync { get; set; }
 

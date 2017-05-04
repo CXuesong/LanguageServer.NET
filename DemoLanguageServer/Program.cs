@@ -13,6 +13,8 @@ using JsonRpc.Standard.Client;
 using JsonRpc.Standard.Contracts;
 using JsonRpc.Standard.Dataflow;
 using JsonRpc.Standard.Server;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Debug;
 
 namespace DemoLanguageServer
 {
@@ -71,11 +73,14 @@ namespace DemoLanguageServer
 
         private static IJsonRpcServiceHost BuildServiceHost(ISession session, TextWriter logWriter, IJsonRpcContractResolver contractResolver)
         {
+            var loggerFactory = new LoggerFactory();
+            loggerFactory.AddProvider(new DebugLoggerProvider(null));
             var builder = new ServiceHostBuilder
             {
                 ContractResolver = contractResolver,
                 Session = session,
                 Options = JsonRpcServiceHostOptions.ConsistentResponseSequence,
+                LoggerFactory = loggerFactory
             };
             builder.Register(typeof(Program).GetTypeInfo().Assembly);
             // Log all the client-to-server calls.

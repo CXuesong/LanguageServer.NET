@@ -22,7 +22,7 @@ namespace DemoLanguageServer.Services
                 {
                     OpenClose = true,
                     WillSave = true,
-                    Change = TextDocumentSyncKind.Full
+                    Change = TextDocumentSyncKind.Incremental
                 }
             });
         }

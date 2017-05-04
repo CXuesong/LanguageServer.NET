@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using LanguageServer.VsCode.Contracts;
 
 namespace LanguageServer.VsCode.Server
 {
@@ -10,6 +11,17 @@ namespace LanguageServer.VsCode.Server
     /// </summary>
     public class TextDocumentCollection : KeyedCollection<Uri, TextDocument>
     {
+        /// <summary>
+        /// Gets the element with the specified key.
+        /// </summary>
+        public TextDocument this[TextDocumentIdentifier key] => this[key.Uri];
+
+        /// <summary>
+        /// Removes the element with the specified key.
+        /// </summary>
+        public bool Remove(TextDocumentIdentifier key)
+            => this.Remove(key.Uri);
+
         /// <inheritdoc />
         protected override void InsertItem(int index, TextDocument item)
         {
