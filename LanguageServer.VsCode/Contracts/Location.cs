@@ -62,6 +62,9 @@ namespace LanguageServer.VsCode.Contracts
         public Position End { get; set; }
 
         /// <inheritdoc />
+        public override string ToString() => $"{Start}-{End}";
+
+        /// <inheritdoc />
         public bool Equals(Range other)
         {
             return Start.Equals(other.Start) && End.Equals(other.End);

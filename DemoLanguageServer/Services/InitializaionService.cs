@@ -27,7 +27,7 @@ namespace DemoLanguageServer.Services
             });
         }
 
-        [JsonRpcMethod]
+        [JsonRpcMethod(IsNotification = true)]
         public async Task Initialized()
         {
             await Client.Window.ShowMessage(MessageType.Info, "Hello from language server.");
@@ -41,7 +41,7 @@ namespace DemoLanguageServer.Services
 
         }
 
-        [JsonRpcMethod]
+        [JsonRpcMethod(IsNotification = true)]
         public void Exit()
         {
             Session.StopServer();

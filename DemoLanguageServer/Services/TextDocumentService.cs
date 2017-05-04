@@ -20,23 +20,31 @@ namespace DemoLanguageServer.Services
         }
 
         [JsonRpcMethod(IsNotification = true)]
-        public void DidOpen(TextDocumentItem textDocument)
+        public async Task DidOpen(TextDocumentItem textDocument)
         {
-            Documents.Add(TextDocument.Load<FullTextDocument>(textDocument));
+            var doc = TextDocument.Load<FullTextDocument>(textDocument);
+            Documents.Add(doc);
+            var diag = Session.DiagnosticProvider.LintDocument(doc, Session.Settings.MaxNumberOfProblems);
+            await Client.Document.PublishDiagnostics(doc.Uri, diag);
         }
 
         [JsonRpcMethod(IsNotification = true)]
-        public void DidChange(TextDocumentIdentifier textDocument,
+        public async Task DidChange(TextDocumentIdentifier textDocument,
             ICollection<TextDocumentContentChangeEvent> contentChanges)
         {
-            Documents[textDocument].ApplyChanges(contentChanges);
+            var doc = Documents[textDocument];
+            doc.ApplyChanges(contentChanges);
+            //await Client.Window.LogMessage(MessageType.Log, "-----------");
+            //await Client.Window.LogMessage(MessageType.Log, doc.Content);
+            var diag = Session.DiagnosticProvider.LintDocument(doc, Session.Settings.MaxNumberOfProblems);
+            await Client.Document.PublishDiagnostics(doc.Uri, diag);
         }
 
         [JsonRpcMethod(IsNotification = true)]
         public void WillSave(TextDocumentIdentifier textDocument, TextDocumentSaveReason reason)
         {
-            Client.Window.LogMessage(MessageType.Log, "-----------");
-            Client.Window.LogMessage(MessageType.Log, Documents[textDocument].Content);
+            //Client.Window.LogMessage(MessageType.Log, "-----------");
+            //Client.Window.LogMessage(MessageType.Log, Documents[textDocument].Content);
         }
 
         [JsonRpcMethod(IsNotification = true)]

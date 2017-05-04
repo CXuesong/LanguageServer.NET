@@ -19,6 +19,7 @@ namespace DemoLanguageServer
             var builder = new JsonRpcProxyBuilder {ContractResolver = contractResolver};
             Client = new ClientProxy(builder, rpcClient);
             Documents = new TextDocumentCollection();
+            DiagnosticProvider = new DiagnosticProvider(Documents);
         }
 
         public CancellationToken CancellationToken => cts.Token;
@@ -28,6 +29,10 @@ namespace DemoLanguageServer
         public ClientProxy Client { get; }
 
         public TextDocumentCollection Documents { get; }
+
+        public DiagnosticProvider DiagnosticProvider { get; }
+
+        public LanguageServerSettings Settings { get; set; } = new LanguageServerSettings();
 
         public void StopServer()
         {

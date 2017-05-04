@@ -1,4 +1,6 @@
-﻿namespace LanguageServer.VsCode.Contracts
+﻿using Newtonsoft.Json;
+
+namespace LanguageServer.VsCode.Contracts
 {
     /// <summary>
     /// A value assigned to a <see cref="Diagnostic" /> determining its severity.
@@ -31,6 +33,24 @@
     /// </summary>
     public class Diagnostic
     {
+        [JsonConstructor]
+        public Diagnostic()
+        {
+        }
+
+        public Diagnostic(DiagnosticSeverity severity, Range range, string code, string message) : this(severity, range, code, message, null)
+        {
+        }
+
+        public Diagnostic(DiagnosticSeverity severity, Range range, string code, string message, string source)
+        {
+            Severity = severity;
+            Range = range;
+            Code = code;
+            Message = message;
+            Source = source;
+        }
+
         /// <summary>
         /// The diagnostic's code.
         /// </summary>
@@ -55,5 +75,8 @@
         /// A human-readable string describing the source of this diagnostic, e.g. 'typescript' or 'super lint'.
         /// </summary>
         public string Source { get; set; }
+
+        /// <inheritdoc />
+        public override string ToString() => $"{Severity}, {Code}[{Range}]{Message}";
     }
 }
