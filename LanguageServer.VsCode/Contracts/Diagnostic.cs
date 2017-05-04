@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace LanguageServer.VsCode.Contracts
 {
@@ -31,6 +33,7 @@ namespace LanguageServer.VsCode.Contracts
     /// <summary>
     /// Represents a diagnostic, such as a compiler error or warning.
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     public class Diagnostic
     {
         [JsonConstructor]
@@ -54,27 +57,38 @@ namespace LanguageServer.VsCode.Contracts
         /// <summary>
         /// The diagnostic's code.
         /// </summary>
+        [JsonProperty]
         public string Code { get; set; }
 
         /// <summary>
         /// The diagnostic's message.
         /// </summary>
+        [JsonProperty]
         public string Message { get; set; }
 
         /// <summary>
         /// The range to which the message applies.
         /// </summary>
+        [JsonProperty]
         public Range Range { get; set; }
 
         /// <summary>
         /// The diagnostic's severity.
         /// </summary>
+        [JsonProperty]
         public DiagnosticSeverity Severity { get; set; }
 
         /// <summary>
         /// A human-readable string describing the source of this diagnostic, e.g. 'typescript' or 'super lint'.
         /// </summary>
+        [JsonProperty]
         public string Source { get; set; }
+
+        /// <summary>
+        /// Signature for further properties.
+        /// </summary>
+        [JsonExtensionData]
+        public IDictionary<string, JToken> ExtensionData { get; set; }
 
         /// <inheritdoc />
         public override string ToString() => $"{Severity}, {Code}[{Range}]{Message}";

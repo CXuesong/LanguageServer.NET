@@ -84,6 +84,7 @@ namespace LanguageServer.VsCode.Contracts
         /// A document selector to identify the scope of the registration. If set to null
         ///	the document selector provided on the client side will be used.
         /// </summary>
+        [JsonProperty]
         public IEnumerable<DocumentFilter> DocumentSelector { get; set; }
     }
 
