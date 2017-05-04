@@ -52,5 +52,27 @@ namespace DemoLanguageServer.Services
         {
             Documents.Remove(textDocument);
         }
+
+        private static readonly CompletionItem[] PredefinedCompletionItems =
+        {
+            new CompletionItem(".NET", CompletionItemKind.Keyword,
+                "Keyword1",
+                "Short for **.NET Framework**, a software framework by Microsoft (possibly its subsets) or later open source .NET Core.",
+                null),
+            new CompletionItem(".NET Standard", CompletionItemKind.Keyword,
+                "Keyword2",
+                "The .NET Standard is a formal specification of .NET APIs that are intended to be available on all .NET runtimes.",
+                null),
+            new CompletionItem(".NET Framework", CompletionItemKind.Keyword,
+                "Keyword3",
+                ".NET Framework (pronounced dot net) is a software framework developed by Microsoft that runs primarily on Microsoft Windows.", null),
+        };
+
+        [JsonRpcMethod]
+        public CompletionList Completion(TextDocumentIdentifier textDocument, Position position)
+        {
+            return new CompletionList(PredefinedCompletionItems);
+        }
+
     }
 }

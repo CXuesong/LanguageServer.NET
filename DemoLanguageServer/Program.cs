@@ -4,6 +4,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -22,35 +23,44 @@ namespace DemoLanguageServer
     {
         static void Main(string[] args)
         {
+            var debugMode = args.Any(a => a.Equals("--debug", StringComparison.OrdinalIgnoreCase));
 #if WAIT_FOR_DEBUGGER
             while (!Debugger.IsAttached) Thread.Sleep(1000);
             Debugger.Break();
 #endif
-            using (var logWriter = File.CreateText("messages-" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".log"))
+            StreamWriter logWriter = null;
+            if (debugMode)
+            {
+                logWriter = File.CreateText("messages-" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".log");
+                logWriter.AutoFlush = true;
+            }
+            using (logWriter)
 #if !USE_CONSOLE_READER
             using (var cin = Console.OpenStandardInput())
             using (var bcin = new BufferedStream(cin))
 #endif
             using (var cout = Console.OpenStandardOutput())
             {
-                logWriter.AutoFlush = true;
                 var contractResolver = new JsonRpcContractResolver
                 {
                     NamingStrategy = new CamelCaseJsonRpcNamingStrategy(),
                     ParameterValueConverter = new CamelCaseJsonValueConverter(),
                 };
                 var client = new JsonRpcClient();
-                client.MessageSending += (_, e) =>
+                if (debugMode)
                 {
-                    lock (logWriter) logWriter.WriteLine("<C{0}", e.Message);
-                };
-                client.MessageReceiving += (_, e) =>
-                {
-                    lock (logWriter) logWriter.WriteLine(">C{0}", e.Message);
-                };
+                    client.MessageSending += (_, e) =>
+                    {
+                        lock (logWriter) logWriter.WriteLine("<C{0}", e.Message);
+                    };
+                    client.MessageReceiving += (_, e) =>
+                    {
+                        lock (logWriter) logWriter.WriteLine(">C{0}", e.Message);
+                    };
+                }
                 // Configure & build service host
                 var session = new LanguageServerSession(client, contractResolver);
-                var host = BuildServiceHost(session, logWriter, contractResolver);
+                var host = BuildServiceHost(session, logWriter, contractResolver, debugMode);
                 // Connect the datablocks
                 var target = new PartwiseStreamMessageTargetBlock(cout);
 #if USE_CONSOLE_READER
@@ -71,7 +81,8 @@ namespace DemoLanguageServer
             }
         }
 
-        private static IJsonRpcServiceHost BuildServiceHost(ISession session, TextWriter logWriter, IJsonRpcContractResolver contractResolver)
+        private static IJsonRpcServiceHost BuildServiceHost(ISession session, TextWriter logWriter,
+            IJsonRpcContractResolver contractResolver, bool debugMode)
         {
             var loggerFactory = new LoggerFactory();
             loggerFactory.AddProvider(new DebugLoggerProvider(null));
@@ -83,13 +94,16 @@ namespace DemoLanguageServer
                 LoggerFactory = loggerFactory
             };
             builder.Register(typeof(Program).GetTypeInfo().Assembly);
-            // Log all the client-to-server calls.
-            builder.Intercept(async (context, next) =>
+            if (debugMode)
             {
-                lock (logWriter) logWriter.WriteLine("> {0}", context.Request);
-                await next();
-                lock (logWriter) logWriter.WriteLine("< {0}", context.Response);
-            });
+                // Log all the client-to-server calls.
+                builder.Intercept(async (context, next) =>
+                {
+                    lock (logWriter) logWriter.WriteLine("> {0}", context.Request);
+                    await next();
+                    lock (logWriter) logWriter.WriteLine("< {0}", context.Response);
+                });
+            }
             return builder.Build();
         }
         

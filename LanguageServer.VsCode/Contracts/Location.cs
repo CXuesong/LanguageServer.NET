@@ -176,20 +176,4 @@ namespace LanguageServer.VsCode.Contracts
             return x.CompareTo(y) <= 0;
         }
     }
-
-    /// <summary>
-    /// A parameter literal used in requests to pass a text document and a position inside that document.
-    /// </summary>
-    public class TextDocumentPositionParams
-    {
-        /// <summary>
-        /// The text document.
-        /// </summary>
-        public Position Position { get; set; }
-
-        /// <summary>
-        /// The position inside the text document.
-        /// </summary>
-        public TextDocumentIdentifier TextDocument { get; set; }
-    }
 }

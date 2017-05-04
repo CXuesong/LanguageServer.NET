@@ -1,9 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace LanguageServer.VsCode.Contracts
 {
     /// <summary>
-    /// Represents a reference to a VS Code command.
+    /// Use <see cref="EditorCommand"/> instead of this class.
+    /// </summary>
+    [Obsolete("Use EditorCommand instead of this class.")]
+    public static class Command
+    {
+        
+    }
+
+    // Sadlys, we cannot have a Command property in Command class.
+    /// <summary>
+    /// Represents a reference to a VS Code command. (<c>Command</c> in language protocol.)
     /// </summary>
     public class EditorCommand
     {

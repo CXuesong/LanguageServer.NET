@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using JsonRpc.Standard;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace LanguageServer.VsCode.Contracts
 {
@@ -48,6 +49,104 @@ namespace LanguageServer.VsCode.Contracts
         /// </remarks>
         [JsonProperty]
         public bool Retry { get; set; }
+    }
+    
+    /// <summary>
+    /// Defines capabilities provided by the language server.
+    /// </summary>
+    [JsonObject(MemberSerialization.OptOut)]
+    public class ServerCapabilities
+    {
+        /// <summary>
+        /// Defines how text documents are synced. Is either a detailed structure defining each notification or
+        /// for backwards compatibility the <see cref="TextDocumentSyncKind" /> number.
+        /// </summary>
+        public TextDocumentSyncOptions TextDocumentSync { get; set; }
+
+        /// <summary>
+        /// The server provides hover support.
+        /// </summary>
+        public bool HoverProvider { get; set; }
+
+        /// <summary>
+        /// The server provides completion support.
+        /// </summary>
+        public CompletionOptions CompletionProvider { get; set; }
+
+        /// <summary>
+        /// The server provides signature help support.
+        /// </summary>
+        public SignatureHelpOptions SignatureHelpProvider { get; set; }
+
+        /// <summary>
+        /// The server provides goto definition support.
+        /// </summary>
+        public bool DefinitionProvider { get; set; }
+
+        /// <summary>
+        /// The server provides find references support.
+        /// </summary>
+        public bool ReferencesProvider { get; set; }
+
+        /// <summary>
+        /// The server provides document highlight support.
+        /// </summary>
+        public bool DocumentHighlightProvider { get; set; }
+
+        /// <summary>
+        /// The server provides document symbol support.
+        /// </summary>
+        public bool DocumentSymbolProvider { get; set; }
+
+        /// <summary>
+        /// The server provides workspace symbol support.
+        /// </summary>
+        public bool WorkspaceSymbolProvider { get; set; }
+
+        /// <summary>
+        /// The server provides code actions.
+        /// </summary>
+        public bool CodeActionProvider { get; set; }
+
+        /// <summary>
+        /// The server provides code lens.
+        /// </summary>
+        public CodeLensOptions CodeLensProvider { get; set; }
+
+        /// <summary>
+        /// The server provides document formatting.
+        /// </summary>
+        public bool DocumentFormattingProvider { get; set; }
+
+        /// <summary>
+        /// The server provides document range formatting.
+        /// </summary>
+        public bool DocumentRangeFormattingProvider { get; set; }
+
+        /// <summary>
+        /// The server provides document formatting on typing.
+        /// </summary>
+        public DocumentOnTypeFormattingOptions DocumentOnTypeFormattingProvider { get; set; }
+
+        /// <summary>
+        /// The server provides rename support.
+        /// </summary>
+        public bool RenameProvider { get; set; }
+
+        /// <summary>
+        /// The server provides document link support.
+        /// </summary>
+        public DocumentLinkOptions DocumentLinkProvider { get; set; }
+
+        /// <summary>
+        /// The server provides execute command support.
+        /// </summary>
+        public ExecuteCommandOptions ExecuteCommandProvider { get; set; }
+
+        /// <summary>
+        /// Experimental server capabilities.
+        /// </summary>
+        public JToken Experimental { get; set; }
     }
 
     /// <summary>
@@ -250,5 +349,42 @@ namespace LanguageServer.VsCode.Contracts
         /// </summary>
         [JsonProperty]
         public bool IncludeText { get; set; }
+    }
+
+    /// <summary>
+    /// Completion options.
+    /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
+    public class CompletionOptions
+    {
+
+        [JsonConstructor]
+        public CompletionOptions()
+        {
+
+        }
+
+        public CompletionOptions(bool resolveProvider) : this(resolveProvider, null)
+        {
+        }
+
+        public CompletionOptions(bool resolveProvider, IEnumerable<char> triggerCharacters)
+        {
+            ResolveProvider = resolveProvider;
+            TriggerCharacters = triggerCharacters;
+        }
+
+        /// <summary>
+        /// The server provides support to resolve additional
+        /// information for a completion item. (i.e. supports <c>completionItem/resolve</c>.)
+        /// </summary>
+        [JsonProperty]
+        public bool ResolveProvider { get; set; }
+
+        /// <summary>
+        /// The characters that trigger completion automatically.
+        /// </summary>
+        [JsonProperty]
+        public IEnumerable<char> TriggerCharacters { get; set; }
     }
 }
