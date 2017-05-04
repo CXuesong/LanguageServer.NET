@@ -38,11 +38,11 @@ namespace LanguageServer.VsCode.Contracts
         /// <summary>
         /// Initialize with given parameters.
         /// </summary>
-        public Registration(string id, string method, RegistrationOptions options)
+        public Registration(string id, string method, RegistrationOptions registerOptions)
         {
             Id = id;
             Method = method;
-            Options = options;
+            RegisterOptions = registerOptions;
         }
 
         /// <summary>
@@ -57,8 +57,6 @@ namespace LanguageServer.VsCode.Contracts
         /// </summary>
         [JsonProperty]
         public string Method { get; set; }
-
-        public RegistrationOptions Options { get; }
 
         /// <summary>
         /// Options necessary for the registration.
