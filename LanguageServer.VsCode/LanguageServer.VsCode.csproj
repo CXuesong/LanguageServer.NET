@@ -9,8 +9,12 @@
     <Company />
     <Description>A .NET Language Server library for VSCode.</Description>
     <Copyright>Copyright 2017 CXuesong</Copyright>
-    <PackageTags>vscode language-server</PackageTags>
+    <PackageTags>vscode language-server language-server-protocol</PackageTags>
     <NeutralLanguage>en-us</NeutralLanguage>
+    <PackageProjectUrl>https://github.com/CXuesong/LanguageServer.NET</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/CXuesong/LanguageServer.NET</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>See https://github.com/CXuesong/LanguageServer.NET/releases .</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

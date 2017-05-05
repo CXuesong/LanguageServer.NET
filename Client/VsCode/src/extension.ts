@@ -16,12 +16,10 @@ const languageServerPaths = [
 function activateLanguageServer(context: vscode.ExtensionContext) {
 	// The server is implemented in an executable application.
 	let serverModule: string = null;
-	for (let p of languageServerPaths)
-	{
+	for (let p of languageServerPaths) {
 		p = context.asAbsolutePath(p);
 		// console.log(p);
-		if (fs.existsSync(p))
-		{
+		if (fs.existsSync(p)) {
 			serverModule = p;
 			break;
 		}
@@ -30,7 +28,7 @@ function activateLanguageServer(context: vscode.ExtensionContext) {
 	let workPath = path.dirname(serverModule);
 	console.log(`Use ${serverModule} as server module.`);
 	console.log(`Work path: ${workPath}.`);
-	
+
 
 	// If the extension is launched in debug mode then the debug server options are used
 	// Otherwise the run options are used
@@ -46,7 +44,10 @@ function activateLanguageServer(context: vscode.ExtensionContext) {
 			// Synchronize the setting section 'languageServerExample' to the server
 			configurationSection: "demoLanguageServer",
 			// Notify the server about file changes to '.clientrc files contain in the workspace
-			fileEvents: vscode.workspace.createFileSystemWatcher("**/.clientrc")
+			fileEvents: [
+				vscode.workspace.createFileSystemWatcher("**/.clientrc"),
+				vscode.workspace.createFileSystemWatcher("**/.demo"),
+			]
 		},
 	}
 

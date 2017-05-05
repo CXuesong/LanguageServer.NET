@@ -50,8 +50,9 @@ namespace DemoLanguageServer.Services
         }
 
         [JsonRpcMethod(IsNotification = true)]
-        public void DidClose(TextDocumentIdentifier textDocument)
+        public async Task DidClose(TextDocumentIdentifier textDocument)
         {
+            await Client.Document.PublishDiagnostics(textDocument.Uri, new Diagnostic[0]);
             Documents.Remove(textDocument);
         }
 

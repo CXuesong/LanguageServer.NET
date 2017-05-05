@@ -1,4 +1,4 @@
-﻿#define WAIT_FOR_DEBUGGER
+﻿//#define WAIT_FOR_DEBUGGER
 //#define USE_CONSOLE_READER
 
 using System;
