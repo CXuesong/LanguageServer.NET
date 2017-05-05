@@ -19,7 +19,11 @@ You may need Visual Studio 2017 to build the demo.
 1.  Open `DemoLanguageServer` in VS, choose `Debug` profile, and build the project.
 2.  Open `Client\VsCode` folder in VSCode.
 3.  Run `npm install` in the terminal.
-4.  Press F5 and a new VSCode window should show.
+4.  Press F5 and a new VSCode window (Extension Development Host) should show.
 5.  Open a folder in the new VSCode window, and create a new file.
 6.  Change the file language to `Demo Language`
 7.  Then your editor will work as shown in the screenshot. Enter `.net core` in the editor and see what happens.
+
+To debug the server application, you may wish to turn `WAIT_FOR_DEBUGGER` conditional switch on in `DemoLanguageServer/Program.cs`. After starting up the Extension Development Host, and activating the language server, you may attach VS Debugger to `dotnet` process and go on debugging.
+
+You may also set the `default` value of `demoLanguageServer.trace.server` to `"messages"` in `package.json` to make language client show more debugging information.
