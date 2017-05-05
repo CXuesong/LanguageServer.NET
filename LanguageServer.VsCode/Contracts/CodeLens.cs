@@ -68,8 +68,29 @@ namespace LanguageServer.VsCode.Contracts
         public JToken Data { get; set; }
     }
 
+    /// <summary>
+    /// Descibe options to be used when registered for code lens events.
+    /// </summary>
     public class CodeLensRegistrationOptions : TextDocumentRegistrationOptions
     {
+
+        [JsonConstructor]
+        public CodeLensRegistrationOptions()
+            : this(false, null)
+        {
+        }
+
+        public CodeLensRegistrationOptions(bool resolveProvider)
+            : this(resolveProvider, null)
+        {
+        }
+
+        public CodeLensRegistrationOptions(bool resolveProvider, IEnumerable<DocumentFilter> documentSelector)
+            : base(documentSelector)
+        {
+            ResolveProvider = resolveProvider;
+        }
+
         /// <summary>
         /// Code lens has a resolve provider as well.
         /// </summary>

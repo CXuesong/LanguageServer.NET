@@ -160,7 +160,7 @@ namespace LanguageServer.VsCode.Contracts
 
         }
 
-        public SignatureHelpOptions(ICollection<string> triggerCharacters)
+        public SignatureHelpOptions(IEnumerable<char> triggerCharacters)
         {
             TriggerCharacters = triggerCharacters;
         }
@@ -169,7 +169,7 @@ namespace LanguageServer.VsCode.Contracts
         /// The characters that trigger signature help automatically.
         /// </summary>
         [JsonProperty]
-        public ICollection<string> TriggerCharacters { get; set; }
+        public IEnumerable<char> TriggerCharacters { get; set; }
     }
 
     /// <summary>

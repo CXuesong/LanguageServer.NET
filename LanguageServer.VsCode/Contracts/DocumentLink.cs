@@ -26,8 +26,29 @@ namespace LanguageServer.VsCode.Contracts
 
     }
 
+    /// <summary>
+    /// Descibe options to be used when registered for document link events.
+    /// </summary>
     public class DocumentLinkRegistrationOptions : TextDocumentRegistrationOptions
     {
+
+        [JsonConstructor]
+        public DocumentLinkRegistrationOptions()
+            : this(false, null)
+        {
+        }
+
+        public DocumentLinkRegistrationOptions(bool resolveProvider)
+            : this(resolveProvider, null)
+        {
+        }
+
+        public DocumentLinkRegistrationOptions(bool resolveProvider, IEnumerable<DocumentFilter> documentSelector)
+            : base(documentSelector)
+        {
+            ResolveProvider = resolveProvider;
+        }
+
         /// <summary>
         /// Document links have a resolve provider as well.
         /// </summary>

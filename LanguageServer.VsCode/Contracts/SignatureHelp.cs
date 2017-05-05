@@ -135,4 +135,35 @@ namespace LanguageServer.VsCode.Contracts
         [JsonProperty]
         public string Documentation { get; set; }
     }
+
+    /// <summary>
+    /// Descibe options to be used when registered for signature help events.
+    /// </summary>
+    public class SignatureHelpRegistrationOptions : TextDocumentRegistrationOptions
+    {
+        [JsonConstructor]
+        public SignatureHelpRegistrationOptions()
+            : this(null, null)
+        {
+        }
+
+        public SignatureHelpRegistrationOptions(IEnumerable<char> triggerCharacters)
+            : this(triggerCharacters, null)
+        {
+        }
+
+
+        public SignatureHelpRegistrationOptions(IEnumerable<char> triggerCharacters,
+            IEnumerable<DocumentFilter> documentSelector)
+            : base(documentSelector)
+        {
+            TriggerCharacters = triggerCharacters;
+        }
+
+        /// <summary>
+        /// The characters that trigger signature help automatically.
+        /// </summary>
+        [JsonProperty]
+        public IEnumerable<char> TriggerCharacters { get; set; }
+    }
 }

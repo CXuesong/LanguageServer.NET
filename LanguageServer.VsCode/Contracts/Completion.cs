@@ -210,4 +210,48 @@ namespace LanguageServer.VsCode.Contracts
         public JToken Data { get; set; }
     }
 
+    /// <summary>
+    /// Descibe options to be used when registered for code completion events.
+    /// </summary>
+    public class CompletionRegistrationOptions : TextDocumentRegistrationOptions
+    {
+        [JsonConstructor]
+        public CompletionRegistrationOptions()
+            : this(false, null, null)
+        {
+        }
+
+        public CompletionRegistrationOptions(bool resolveProvider)
+            : this(resolveProvider, null, null)
+        {
+        }
+
+
+        public CompletionRegistrationOptions(bool resolveProvider, IEnumerable<char> triggerCharacters)
+            : this(resolveProvider, triggerCharacters, null)
+        {
+        }
+
+
+        public CompletionRegistrationOptions(bool resolveProvider, IEnumerable<char> triggerCharacters, IEnumerable<DocumentFilter> documentSelector)
+            : base(documentSelector)
+        {
+            ResolveProvider = resolveProvider;
+            TriggerCharacters = triggerCharacters;
+        }
+
+        /// <summary>
+        /// The server provides support to resolve additional
+        /// information for a completion item. (i.e. supports <c>completionItem/resolve</c>.)
+        /// </summary>
+        [JsonProperty]
+        public bool ResolveProvider { get; set; }
+
+        /// <summary>
+        /// The characters that trigger completion automatically.
+        /// </summary>
+        [JsonProperty]
+        public IEnumerable<char> TriggerCharacters { get; set; }
+    }
+
 }

@@ -63,6 +63,33 @@ namespace LanguageServer.VsCode.Contracts
     }
 
     /// <summary>
+    /// Descibe options to be used when registered for text document change events.
+    /// </summary>
+    public class TextDocumentChangeRegistrationOptions : TextDocumentRegistrationOptions
+    {
+        [JsonConstructor]
+        public TextDocumentChangeRegistrationOptions() 
+            : this(TextDocumentSyncKind.None, null)
+        {
+        }
+
+        public TextDocumentChangeRegistrationOptions(TextDocumentSyncKind syncKind) 
+            : this(syncKind, null)
+        {
+        }
+
+
+        public TextDocumentChangeRegistrationOptions(TextDocumentSyncKind syncKind, IEnumerable<DocumentFilter> documentSelector) 
+            : base(documentSelector)
+        {
+            SyncKind = syncKind;
+        }
+
+        [JsonProperty]
+        private TextDocumentSyncKind SyncKind { get; set; }
+    }
+
+    /// <summary>
     /// Represents reasons why a text document is saved. (In <c>textDocument/willSave</c>.)
     /// </summary>
     public enum TextDocumentSaveReason
@@ -80,5 +107,32 @@ namespace LanguageServer.VsCode.Contracts
         /// When the editor lost focus.
         /// </summary>
         FocusOut = 3,
+    }
+
+    /// <summary>
+    /// Descibe options to be used when registered for text document save events.
+    /// </summary>
+    public class TextDocumentSaveRegistrationOptions : TextDocumentRegistrationOptions
+    {
+        [JsonConstructor]
+        public TextDocumentSaveRegistrationOptions()
+            : this(false, null)
+        {
+        }
+
+        public TextDocumentSaveRegistrationOptions(bool includeText)
+            : this(includeText, null)
+        {
+        }
+
+
+        public TextDocumentSaveRegistrationOptions(bool includeText, IEnumerable<DocumentFilter> documentSelector)
+            : base(documentSelector)
+        {
+            IncludeText = includeText;
+        }
+
+        [JsonProperty]
+        private bool IncludeText { get; set; }
     }
 }

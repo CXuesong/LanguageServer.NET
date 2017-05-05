@@ -66,6 +66,7 @@ namespace LanguageServer.VsCode.Contracts
     }
 
     /// <summary>
+    /// Registration options for <see cref="Registration"/> in <c>client/registerCapability</c>.
     /// You may derive your own options class from here, if necessary.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
@@ -80,6 +81,18 @@ namespace LanguageServer.VsCode.Contracts
     /// </summary>
     public class TextDocumentRegistrationOptions : RegistrationOptions
     {
+
+        [JsonConstructor]
+        public TextDocumentRegistrationOptions()
+        {
+            
+        }
+
+        public TextDocumentRegistrationOptions(IEnumerable<DocumentFilter> documentSelector)
+        {
+            DocumentSelector = documentSelector;
+        }
+
         /// <summary>
         /// A document selector to identify the scope of the registration. If set to null
         ///	the document selector provided on the client side will be used.

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace LanguageServer.VsCode.Contracts
 {
@@ -32,5 +34,27 @@ namespace LanguageServer.VsCode.Contracts
         /// Title of the command, like `save`.
         /// </summary>
         public string Title { get; set; }
+    }
+
+    /// <summary>
+    /// Execute command registration options.
+    /// </summary>
+    public class ExecuteCommandRegistrationOptions : RegistrationOptions
+    {
+        [JsonConstructor]
+        public ExecuteCommandRegistrationOptions() : this(null)
+        {
+        }
+
+        public ExecuteCommandRegistrationOptions(ICollection<string> commands)
+        {
+            Commands = commands;
+        }
+
+        /// <summary>
+        /// The commands to be executed on the server.
+        /// </summary>
+        [JsonProperty]
+        public IEnumerable<string> Commands { get; set; }
     }
 }
