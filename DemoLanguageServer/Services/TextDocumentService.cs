@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using JsonRpc.Standard.Contracts;
 using JsonRpc.Standard.Server;
@@ -13,9 +14,10 @@ namespace DemoLanguageServer.Services
     public class TextDocumentService : DemoLanguageServiceBase
     {
         [JsonRpcMethod]
-        public async Task<Hover> Hover(TextDocumentIdentifier textDocument, Position position)
+        public async Task<Hover> Hover(TextDocumentIdentifier textDocument, Position position, CancellationToken ct)
         {
-            await Task.Delay(1000);
+            // Note that Hover is cancellable.
+            await Task.Delay(1000, ct);
             return new Hover {Contents = "Test _hover_ @" + position + "\n\n" + textDocument};
         }
 

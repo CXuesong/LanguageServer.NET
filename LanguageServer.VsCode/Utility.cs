@@ -6,6 +6,7 @@ namespace LanguageServer.VsCode
 {
     internal static class Utility
     {
-
+        // Defined by the protocol.
+        public const int RequestCancelledErrorCode = -32800;
     }
 }

@@ -1,4 +1,4 @@
-﻿//#define WAIT_FOR_DEBUGGER
+﻿#define WAIT_FOR_DEBUGGER
 //#define USE_CONSOLE_READER
 
 using System;
@@ -6,14 +6,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks.Dataflow;
-using JsonRpc.Standard;
 using JsonRpc.Standard.Client;
 using JsonRpc.Standard.Contracts;
 using JsonRpc.Standard.Dataflow;
 using JsonRpc.Standard.Server;
+using LanguageServer.VsCode;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Debug;
 
@@ -93,6 +91,7 @@ namespace DemoLanguageServer
                 Options = JsonRpcServiceHostOptions.ConsistentResponseSequence,
                 LoggerFactory = loggerFactory
             };
+            builder.UseCancellationHandling();
             builder.Register(typeof(Program).GetTypeInfo().Assembly);
             if (debugMode)
             {

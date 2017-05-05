@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using JsonRpc.Standard;
 using JsonRpc.Standard.Contracts;
 using JsonRpc.Standard.Server;
 using LanguageServer.VsCode.Contracts;
@@ -46,6 +47,12 @@ namespace DemoLanguageServer.Services
         public void Exit()
         {
             Session.StopServer();
+        }
+
+        [JsonRpcMethod("$/cancelRequest", IsNotification = true)]
+        public void CancelRequest(MessageId id)
+        {
+            RequestContext.ServiceHost.TryCancelRequest(id);
         }
     }
 }

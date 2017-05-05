@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CXuesong.JsonRpc.Standard" Version="0.2.0-int3" />
+    <PackageReference Include="CXuesong.JsonRpc.Standard" Version="0.2.1-int0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
   </ItemGroup>
 
