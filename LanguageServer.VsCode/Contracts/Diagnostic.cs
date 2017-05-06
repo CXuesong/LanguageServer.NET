@@ -36,6 +36,12 @@ namespace LanguageServer.VsCode.Contracts
     [JsonObject(MemberSerialization.OptIn)]
     public class Diagnostic
     {
+
+        /// <summary>
+        /// Represents an empty array of <see cref="Diagnostic"/>
+        /// </summary>
+        public static readonly Diagnostic[] EmptyDiagnostics = { };
+
         [JsonConstructor]
         public Diagnostic()
         {

@@ -14,7 +14,8 @@ namespace LanguageServer.VsCode.Contracts.Client
         /// Diagnostics notification are sent from the server to the client to signal results of validation runs.
         /// </summary>
         /// <param name="uri">The URI for which diagnostic information is reported.</param>
-        /// <param name="diagnostics"> An array of diagnostic information items.</param>
+        /// <param name="diagnostics">An array of diagnostic information items.
+        /// To clear the existing diagnostics, pass <see cref="Diagnostic.EmptyDiagnostics"/> instead of <c>null</c>.</param>
         [JsonRpcMethod(IsNotification = true)]
         Task PublishDiagnostics(Uri uri, IEnumerable<Diagnostic> diagnostics);
     }

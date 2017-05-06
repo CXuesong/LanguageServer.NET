@@ -36,5 +36,13 @@ namespace LanguageServer.VsCode
                 }
             });
         }
+
+        /// <summary>
+        /// Determines whether the specified document URI indeicates an unsaved document.
+        /// </summary>
+        public static bool IsUntitled(this Uri documentUri)
+        {
+            return documentUri.Scheme == "untitled";
+        }
     }
 }

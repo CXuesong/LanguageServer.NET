@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JsonRpc.Standard.Contracts;
 using JsonRpc.Standard.Server;
+using LanguageServer.VsCode;
 using LanguageServer.VsCode.Contracts;
 using LanguageServer.VsCode.Server;
 
@@ -52,7 +53,10 @@ namespace DemoLanguageServer.Services
         [JsonRpcMethod(IsNotification = true)]
         public async Task DidClose(TextDocumentIdentifier textDocument)
         {
-            await Client.Document.PublishDiagnostics(textDocument.Uri, new Diagnostic[0]);
+            if (textDocument.Uri.IsUntitled())
+            {
+                await Client.Document.PublishDiagnostics(textDocument.Uri, new Diagnostic[0]);
+            }
             Documents.Remove(textDocument);
         }
 
