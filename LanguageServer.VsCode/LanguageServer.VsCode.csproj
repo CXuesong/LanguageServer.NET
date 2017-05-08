@@ -5,7 +5,7 @@
     <PackageId>CXuesong.LanguageServer.VsCode</PackageId>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>CXuesong</Authors>
-    <Version>0.1.0-int1</Version>
+    <Version>0.1.1-int1</Version>
     <Company />
     <Description>A .NET Language Server library for VSCode.</Description>
     <Copyright>Copyright 2017 CXuesong</Copyright>

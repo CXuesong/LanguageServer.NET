@@ -9,13 +9,11 @@ namespace DemoLanguageServer
     public class DiagnosticProvider
     {
 
-        public DiagnosticProvider(TextDocumentCollection textDocuments)
+        public DiagnosticProvider()
         {
-            if (textDocuments == null) throw new ArgumentNullException(nameof(textDocuments));
-            TextDocuments = textDocuments;
+
         }
 
-        public TextDocumentCollection TextDocuments { get; }
 
         private static readonly string[] Keywords =
             {".NET Framework", ".NET Core", ".NET Standard", ".NET Compact", ".NET"};

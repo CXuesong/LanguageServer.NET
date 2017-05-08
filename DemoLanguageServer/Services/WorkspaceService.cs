@@ -16,10 +16,10 @@ namespace DemoLanguageServer.Services
         public async Task DidChangeConfiguration(SettingsRoot settings)
         {
             Session.Settings = settings.DemoLanguageServer;
-            foreach (var doc in Session.Documents)
+            foreach (var doc in Session.Documents.Values)
             {
-                var diag = Session.DiagnosticProvider.LintDocument(doc, Session.Settings.MaxNumberOfProblems);
-                await Client.Document.PublishDiagnostics(doc.Uri, diag);
+                var diag = Session.DiagnosticProvider.LintDocument(doc.Document, Session.Settings.MaxNumberOfProblems);
+                await Client.Document.PublishDiagnostics(doc.Document.Uri, diag);
             }
         }
 

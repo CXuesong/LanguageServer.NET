@@ -25,22 +25,29 @@ namespace DemoLanguageServer.Services
         [JsonRpcMethod(IsNotification = true)]
         public async Task DidOpen(TextDocumentItem textDocument)
         {
-            var doc = TextDocument.Load<FullTextDocument>(textDocument);
-            Documents.Add(doc);
-            var diag = Session.DiagnosticProvider.LintDocument(doc, Session.Settings.MaxNumberOfProblems);
-            await Client.Document.PublishDiagnostics(doc.Uri, diag);
+            var doc = new SessionDocument(textDocument);
+            var session = Session;
+            doc.DocumentChanged += async (sender, args) =>
+            {
+                // Lint the document when it's changed.
+                var doc1 = ((SessionDocument) sender).Document;
+                var diag1 = session.DiagnosticProvider.LintDocument(doc1, session.Settings.MaxNumberOfProblems);
+                if (session.Documents.ContainsKey(doc1.Uri))
+                {
+                    // In case the document has been closed when we were linting…
+                    await session.Client.Document.PublishDiagnostics(doc1.Uri, diag1);
+                }
+            };
+            Session.Documents.TryAdd(textDocument.Uri, doc);
+            var diag = Session.DiagnosticProvider.LintDocument(doc.Document, Session.Settings.MaxNumberOfProblems);
+            await Client.Document.PublishDiagnostics(textDocument.Uri, diag);
         }
 
         [JsonRpcMethod(IsNotification = true)]
-        public async Task DidChange(TextDocumentIdentifier textDocument,
+        public void DidChange(TextDocumentIdentifier textDocument,
             ICollection<TextDocumentContentChangeEvent> contentChanges)
         {
-            var doc = Documents[textDocument];
-            doc.ApplyChanges(contentChanges);
-            //await Client.Window.LogMessage(MessageType.Log, "-----------");
-            //await Client.Window.LogMessage(MessageType.Log, doc.Content);
-            var diag = Session.DiagnosticProvider.LintDocument(doc, Session.Settings.MaxNumberOfProblems);
-            await Client.Document.PublishDiagnostics(doc.Uri, diag);
+            Session.Documents[textDocument.Uri].NotifyChanges(contentChanges);
         }
 
         [JsonRpcMethod(IsNotification = true)]
@@ -57,7 +64,7 @@ namespace DemoLanguageServer.Services
             {
                 await Client.Document.PublishDiagnostics(textDocument.Uri, new Diagnostic[0]);
             }
-            Documents.Remove(textDocument);
+            Session.Documents.TryRemove(textDocument.Uri, out _);
         }
 
         private static readonly CompletionItem[] PredefinedCompletionItems =

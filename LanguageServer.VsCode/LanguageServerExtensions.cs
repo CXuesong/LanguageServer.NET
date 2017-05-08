@@ -38,8 +38,11 @@ namespace LanguageServer.VsCode
         }
 
         /// <summary>
-        /// Determines whether the specified document URI indeicates an unsaved document.
+        /// Determines whether the specified document URI indeicates an "untitled" document.
         /// </summary>
+        /// <remarks>
+        /// The URI of an untitled document has the following structure: <c>untitled:xxxxx</c>.
+        /// </remarks>
         public static bool IsUntitled(this Uri documentUri)
         {
             return documentUri.Scheme == "untitled";
