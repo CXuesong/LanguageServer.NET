@@ -57,6 +57,12 @@ namespace LanguageServer.VsCode.Contracts
             End = end;
         }
 
+        public Range(int startLine, int startCharacter, int endLine, int endCharacter)
+        {
+            Start = new Position(startLine, startCharacter);
+            End = new Position(endLine, endCharacter);
+        }
+
         public Position Start { get; set; }
 
         public Position End { get; set; }

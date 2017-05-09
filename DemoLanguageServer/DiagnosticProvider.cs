@@ -26,7 +26,7 @@ namespace DemoLanguageServer
             {
                 diag.Add(new Diagnostic(DiagnosticSeverity.Hint,
                     new Range(new Position(0, 0), document.PositionAt(content?.Length ?? 0)),
-                    "DLS0001", "Empty document. Try typing something, such as \".net core\".", "DLS"));
+                    "DLS", "DLS0001", "Empty document. Try typing something, such as \".net core\"."));
                 return diag;
             }
             foreach (var kw in Keywords)
@@ -43,13 +43,11 @@ namespace DemoLanguageServer
                     if (inputKw != kw)
                     {
                         diag.Add(new Diagnostic(DiagnosticSeverity.Warning,
-                            new Range(document.PositionAt(pos), document.PositionAt(separatorPos)),
-                            "DLS1001", $"\"{inputKw}\" should be \"{kw}\".", "DLS"));
+                            new Range(document.PositionAt(pos), document.PositionAt(separatorPos)), "DLS", "DLS1001", $"\"{inputKw}\" should be \"{kw}\"."));
                         if (diag.Count >= maxNumberOfProblems)
                         {
                             diag.Add(new Diagnostic(DiagnosticSeverity.Information,
-                                new Range(document.PositionAt(pos), document.PositionAt(separatorPos)),
-                                "DLS2001", "Too many messages, exiting…", "DLS"));
+                                new Range(document.PositionAt(pos), document.PositionAt(separatorPos)), "DLS", "DLS2001", "Too many messages, exiting…"));
                             return diag;
                         }
                     }

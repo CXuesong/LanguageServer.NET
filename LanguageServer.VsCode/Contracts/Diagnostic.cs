@@ -47,17 +47,17 @@ namespace LanguageServer.VsCode.Contracts
         {
         }
 
-        public Diagnostic(DiagnosticSeverity severity, Range range, string code, string message) : this(severity, range, code, message, null)
+        public Diagnostic(DiagnosticSeverity severity, Range range, string source, string message) : this(severity, range, source, null, message)
         {
         }
 
-        public Diagnostic(DiagnosticSeverity severity, Range range, string code, string message, string source)
+        public Diagnostic(DiagnosticSeverity severity, Range range, string source, string code, string message)
         {
             Severity = severity;
             Range = range;
+            Source = source;
             Code = code;
             Message = message;
-            Source = source;
         }
 
         /// <summary>
