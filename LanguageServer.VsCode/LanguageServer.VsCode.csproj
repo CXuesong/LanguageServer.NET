@@ -15,6 +15,8 @@
     <RepositoryUrl>https://github.com/CXuesong/LanguageServer.NET</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReleaseNotes>See https://github.com/CXuesong/LanguageServer.NET/releases .</PackageReleaseNotes>
+    <AssemblyVersion>0.1.1.1</AssemblyVersion>
+    <FileVersion>0.1.1.1</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
