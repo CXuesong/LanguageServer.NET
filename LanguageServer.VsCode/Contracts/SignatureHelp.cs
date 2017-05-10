@@ -20,6 +20,10 @@ namespace LanguageServer.VsCode.Contracts
 
         }
 
+        public SignatureHelp(IList<SignatureInformation> signatures) : this(signatures, 0, 0)
+        {
+        }
+
         public SignatureHelp(IList<SignatureInformation> signatures, int activeSignature, int activeParameter)
         {
             Signatures = signatures;
@@ -71,6 +75,14 @@ namespace LanguageServer.VsCode.Contracts
         public SignatureInformation()
         {
 
+        }
+
+        public SignatureInformation(string label) : this(label, null, null)
+        {
+        }
+
+        public SignatureInformation(string label, string documentation) : this(label, documentation, null)
+        {
         }
 
         public SignatureInformation(string label, string documentation, IList<ParameterInformation> parameters)

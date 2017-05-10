@@ -22,6 +22,16 @@ namespace DemoLanguageServer.Services
             return new Hover {Contents = "Test _hover_ @" + position + "\n\n" + textDocument};
         }
 
+        [JsonRpcMethod]
+        public SignatureHelp SignatureHelp(TextDocumentIdentifier textDocument, Position position)
+        {
+            return new SignatureHelp(new List<SignatureInformation>
+            {
+                new SignatureInformation("**Function1**", "Documentation1"),
+                new SignatureInformation("**Function2** <strong>test</strong>", "Documentation2"),
+            });
+        }
+
         [JsonRpcMethod(IsNotification = true)]
         public async Task DidOpen(TextDocumentItem textDocument)
         {
