@@ -1,10 +1,12 @@
 # LanguageServer.NET
 
-A .NET Language Server library for VSCode, and hopefully, might be used with other IDEs that support [MS Language Server Protocol](https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md). Still work in progress and API is subject to changes.
+A .NET implementation of [Language Server Protocol](https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md) infrastructure library for VSCode, and hopefully, might also be used with other IDEs that support Language Server Protocol. Still work in progress and API is subject to change.
 
 ![Screenshot of DemoLanguageServer](README.resource/Screenshot.gif)
 
 Based on [CXuesong/JsonRpc.Standard](https://github.com/CXuesong/JsonRpc.Standard), this .NET Standard library intends to provide basic interfaces and data structures so that you can write a language server in C#, build it on .NET Core and, with the help of the client-side code of [Microsoft/vscode-languageserver-node](https://github.com/Microsoft/vscode-languageserver-node), use it in VSCode.
+
+For an actual (WIP) [Wikitext](https://en.wikipedia.org/wiki/Wiki_markup) language server based on this library, please take a look at [CXuesong/MwLanguageServer](https://github.com/CXuesong/MwLanguageServer).
 
 The library is now available on NuGet. To install the package, run the following command in the Package Manager Console
 
