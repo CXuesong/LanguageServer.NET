@@ -259,7 +259,7 @@ namespace LanguageServer.VsCode.Contracts
 
         }
 
-        public ExecuteCommandOptions(IList<string> commands)
+        public ExecuteCommandOptions(IEnumerable<string> commands)
         {
             Commands = commands;
         }
@@ -268,7 +268,7 @@ namespace LanguageServer.VsCode.Contracts
         /// Document links have a resolve provider as well.
         /// </summary>
         [JsonProperty]
-        public IList<string> Commands { get; set; }
+        public IEnumerable<string> Commands { get; set; }
     }
 
     /// <summary>

@@ -46,7 +46,7 @@ namespace LanguageServer.VsCode.Contracts
         {
         }
 
-        public ExecuteCommandRegistrationOptions(ICollection<string> commands)
+        public ExecuteCommandRegistrationOptions(IEnumerable<string> commands)
         {
             Commands = commands;
         }

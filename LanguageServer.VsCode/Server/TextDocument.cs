@@ -76,6 +76,15 @@ namespace LanguageServer.VsCode.Server
         public abstract TextDocument ApplyChanges(IList<TextDocumentContentChangeEvent> changes);
 
         /// <summary>
+        /// Gets a part of the content by the specified line/column-based range.
+        /// </summary>
+        public virtual string GetRange(Range range)
+        {
+            var start = OffsetAt(range.Start);
+            return GetRange(start, OffsetAt(range.End) - start);
+        }
+
+        /// <summary>
         /// Gets a part of the content by the specified offset range.
         /// </summary>
         public abstract string GetRange(int offset, int length);
