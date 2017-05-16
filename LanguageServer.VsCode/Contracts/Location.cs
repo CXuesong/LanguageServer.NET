@@ -147,9 +147,9 @@ namespace LanguageServer.VsCode.Contracts
         /// <inheritdoc />
         public int CompareTo(Position other)
         {
-            var characterComparison = Character.CompareTo(other.Character);
-            if (characterComparison != 0) return characterComparison;
-            return Line.CompareTo(other.Line);
+            var lineCmp = Line.CompareTo(other.Line);
+            if (lineCmp != 0) return lineCmp;
+            return Character.CompareTo(other.Character);
         }
 
         public static bool operator == (Position x, Position y)
