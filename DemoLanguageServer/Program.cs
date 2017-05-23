@@ -7,9 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using JsonRpc.Dataflow;
 using JsonRpc.Standard.Client;
 using JsonRpc.Standard.Contracts;
-using JsonRpc.Standard.Dataflow;
 using JsonRpc.Standard.Server;
 using LanguageServer.VsCode;
 using Microsoft.Extensions.Logging;
@@ -79,16 +79,14 @@ namespace DemoLanguageServer
             }
         }
 
-        private static IJsonRpcServiceHost BuildServiceHost(ISession session, TextWriter logWriter,
+        private static DataflowRpcServiceHost BuildServiceHost(LanguageServerSession session, TextWriter logWriter,
             IJsonRpcContractResolver contractResolver, bool debugMode)
         {
             var loggerFactory = new LoggerFactory();
             loggerFactory.AddProvider(new DebugLoggerProvider(null));
-            var builder = new ServiceHostBuilder
+            var builder = new JsonRpcServiceHostBuilder
             {
                 ContractResolver = contractResolver,
-                Session = session,
-                Options = JsonRpcServiceHostOptions.ConsistentResponseSequence,
                 LoggerFactory = loggerFactory
             };
             builder.UseCancellationHandling();
@@ -103,7 +101,12 @@ namespace DemoLanguageServer
                     lock (logWriter) logWriter.WriteLine("< {0}", context.Response);
                 });
             }
-            return builder.Build();
+            var host = builder.Build();
+            var features = new FeatureCollection();
+            features.Set(session);
+            return new DataflowRpcServiceHost(host, features,
+                DataflowRpcServiceHostOptions.ConsistentResponseSequence |
+                DataflowRpcServiceHostOptions.SupportsRequestCancellation);
         }
         
     }

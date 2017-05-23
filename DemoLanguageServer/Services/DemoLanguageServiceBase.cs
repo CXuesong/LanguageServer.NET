@@ -12,7 +12,7 @@ namespace DemoLanguageServer.Services
     public class DemoLanguageServiceBase : JsonRpcService
     {
 
-        protected LanguageServerSession Session => (LanguageServerSession)RequestContext.Session;
+        protected LanguageServerSession Session => RequestContext.Features.Get<LanguageServerSession>();
 
         protected ClientProxy Client => Session.Client;
 

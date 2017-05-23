@@ -14,7 +14,7 @@ using LanguageServer.VsCode.Server;
 
 namespace DemoLanguageServer
 {
-    public class LanguageServerSession : Session
+    public class LanguageServerSession
     {
         private readonly CancellationTokenSource cts = new CancellationTokenSource();
 

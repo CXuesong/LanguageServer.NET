@@ -17,7 +17,7 @@ namespace LanguageServer.VsCode
         /// Interprets any <see cref="OperationCanceledException" /> thrown by the service
         /// as <c>RequestCancelled</c> error per definition in Language Server Protocol.
         /// </summary>
-        public static void UseCancellationHandling(this ServiceHostBuilder builder)
+        public static void UseCancellationHandling(this JsonRpcServiceHostBuilder builder)
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));
             builder.Intercept(async (context, next) =>

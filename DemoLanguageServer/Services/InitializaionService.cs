@@ -53,7 +53,7 @@ namespace DemoLanguageServer.Services
         [JsonRpcMethod("$/cancelRequest", IsNotification = true)]
         public void CancelRequest(MessageId id)
         {
-            RequestContext.ServiceHost.TryCancelRequest(id);
+            RequestContext.Features.Get<IRequestCancellationFeature>().TryCancel(id);
         }
     }
 }
