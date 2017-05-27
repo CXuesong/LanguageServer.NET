@@ -1,5 +1,4 @@
 ﻿//#define WAIT_FOR_DEBUGGER
-//#define USE_CONSOLE_READER
 
 using System;
 using System.Diagnostics;
@@ -7,10 +6,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using JsonRpc.Dataflow;
 using JsonRpc.Standard.Client;
 using JsonRpc.Standard.Contracts;
 using JsonRpc.Standard.Server;
+using JsonRpc.Streams;
 using LanguageServer.VsCode;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Debug;
@@ -33,53 +32,50 @@ namespace DemoLanguageServer
                 logWriter.AutoFlush = true;
             }
             using (logWriter)
-#if !USE_CONSOLE_READER
             using (var cin = Console.OpenStandardInput())
             using (var bcin = new BufferedStream(cin))
-#endif
             using (var cout = Console.OpenStandardOutput())
+            using (var reader = new PartwiseStreamMessageReader(bcin))
+            using (var writer = new PartwiseStreamMessageWriter(cout))
             {
                 var contractResolver = new JsonRpcContractResolver
                 {
                     NamingStrategy = new CamelCaseJsonRpcNamingStrategy(),
                     ParameterValueConverter = new CamelCaseJsonValueConverter(),
                 };
-                var client = new JsonRpcClient();
+                var clientHandler = new StreamRpcClientHandler();
+                var client = new JsonRpcClient(clientHandler);
                 if (debugMode)
                 {
-                    client.MessageSending += (_, e) =>
+                    // We want to capture log all the LSP server-to-client calls as well
+                    clientHandler.MessageSending += (_, e) =>
                     {
                         lock (logWriter) logWriter.WriteLine("<C{0}", e.Message);
                     };
-                    client.MessageReceiving += (_, e) =>
+                    clientHandler.MessageReceiving += (_, e) =>
                     {
                         lock (logWriter) logWriter.WriteLine(">C{0}", e.Message);
                     };
                 }
                 // Configure & build service host
                 var session = new LanguageServerSession(client, contractResolver);
-                var host = BuildServiceHost(session, logWriter, contractResolver, debugMode);
-                // Connect the datablocks
-                var target = new PartwiseStreamMessageTargetBlock(cout);
-#if USE_CONSOLE_READER
-
-                var source = new ByLineTextMessageSourceBlock(Console.In);
-#else
-                var source = new PartwiseStreamMessageSourceBlock(bcin);
-#endif
-                using (host.Attach(source, target))
-                    // We want to capture log all the server-to-client calls as well
-                using (client.Attach(source, target))
-                    // If we want server to stop, just stop the "source"
-                using (session.CancellationToken.Register(() => source.Complete()))
+                var host = BuildServiceHost(logWriter, contractResolver, debugMode);
+                var serverHandler = new StreamRpcServerHandler(host,
+                    StreamRpcServerHandlerOptions.ConsistentResponseSequence |
+                    StreamRpcServerHandlerOptions.SupportsRequestCancellation);
+                serverHandler.DefaultFeatures.Set(session);
+                // If we want server to stop, just stop the "source"
+                using (serverHandler.Attach(reader, writer))
+                using (clientHandler.Attach(reader, writer))
                 {
+                    // Wait for the "stop" request.
                     session.CancellationToken.WaitHandle.WaitOne();
                 }
-                logWriter.WriteLine("Exited");
+                logWriter?.WriteLine("Exited");
             }
         }
 
-        private static DataflowRpcServiceHost BuildServiceHost(LanguageServerSession session, TextWriter logWriter,
+        private static IJsonRpcServiceHost BuildServiceHost(TextWriter logWriter,
             IJsonRpcContractResolver contractResolver, bool debugMode)
         {
             var loggerFactory = new LoggerFactory();
@@ -101,13 +97,8 @@ namespace DemoLanguageServer
                     lock (logWriter) logWriter.WriteLine("< {0}", context.Response);
                 });
             }
-            var host = builder.Build();
-            var features = new FeatureCollection();
-            features.Set(session);
-            return new DataflowRpcServiceHost(host, features,
-                DataflowRpcServiceHostOptions.ConsistentResponseSequence |
-                DataflowRpcServiceHostOptions.SupportsRequestCancellation);
+            return builder.Build();
         }
-        
+
     }
 }
