@@ -1,6 +1,6 @@
 # LanguageServer.NET
 
-[![Gitter](https://badges.gitter.im/CXuesong/LanguageServer.NET.svg?style=flat-square)](https://gitter.im/CXuesong/LanguageServer.NET?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![NuGet version (CXuesong.LanguageServer.VsCode)](https://img.shields.io/nuget/vpre/CXuesong.LanguageServer.VsCode.svg?style=flat-square)](https://www.nuget.org/packages/CXuesong.LanguageServer.VsCode) [![Gitter](https://badges.gitter.im/CXuesong/LanguageServer.NET.svg?style=flat-square)](https://gitter.im/CXuesong/LanguageServer.NET?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 A .NET implementation of [Language Server Protocol](https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md) infrastructure library for VSCode, and hopefully, might also be used with other IDEs that support Language Server Protocol. It supports LSP 2.0 and should support LSP 3.x (if not, please open an issue; thanks).
 
