@@ -68,11 +68,11 @@ namespace LanguageServer.VsCode.Contracts
             
         }
 
-        public CompletionList(IEnumerable<CompletionItem> items) : this(false, items)
+        public CompletionList(IEnumerable<CompletionItem> items) : this(items, false)
         {
         }
 
-        public CompletionList(bool isIncomplete, IEnumerable<CompletionItem> items)
+        public CompletionList(IEnumerable<CompletionItem> items, bool isIncomplete)
         {
             IsIncomplete = isIncomplete;
             Items = items;
@@ -193,6 +193,13 @@ namespace LanguageServer.VsCode.Contracts
         /// </summary>
         [JsonProperty]
         public IEnumerable<TextEdit> AdditionalTextEdits { get; set; }
+
+        /// <summary>
+        /// An optional set of characters that when pressed while this completion is active will accept it first and
+        /// then type that character.
+        /// </summary>
+        [JsonProperty]
+        public IEnumerable<char> CommitCharacters { get; set; }
 
         /// <summary>
         /// An optional command that is executed *after* inserting this completion. *Note* that
