@@ -136,13 +136,13 @@ namespace LanguageServer.VsCode.Contracts
         /// The server provides hover support.
         /// </summary>
         [JsonProperty]
-        public DynamicClientCapability Hover { get; set; }
+        public TextDocumentHoverCapability Hover { get; set; }
 
         /// <summary>
         /// The server provides signature help support.
         /// </summary>
         [JsonProperty]
-        public DynamicClientCapability SignatureHelp { get; set; }
+        public TextDocumentSignatureHelpCapability SignatureHelp { get; set; }
 
         /// <summary>
         /// The server provides goto definition support.
@@ -237,12 +237,26 @@ namespace LanguageServer.VsCode.Contracts
 
     public class TextDocumentCompletionCapability : DynamicClientCapability
     {
+
+        /// <summary>
+        /// The client supports the following <see cref="Contracts.CompletionItem"/> specific capabilities.
+        /// </summary>
         [JsonProperty]
-        public TextDocumentCompletionCapabilityItem CompletionItem { get; set; }
+        public TextDocumentCompletionItemCapability CompletionItem { get; set; }
+
+        [JsonProperty]
+        public TextDocumentCompletionItemKindCapability CompletionItemKind { get; set; }
+
+        /// <summary>
+        /// The client supports to send additional context information for a
+        /// <c>textDocument/completion</c> request.
+        /// </summary>
+        [JsonProperty]
+        public bool ContextSupport { get; set; }
     }
 
     [JsonObject(MemberSerialization.OptIn)]
-    public class TextDocumentCompletionCapabilityItem
+    public class TextDocumentCompletionItemCapability
     {
         /// <summary>
         /// Client supports snippets as insert text.
@@ -255,5 +269,74 @@ namespace LanguageServer.VsCode.Contracts
         /// </remarks>
         [JsonProperty]
         public bool SnippetSupport { get; set; }
+
+        /// <summary>Client supports commit <see cref="CompletionItem.CommitCharacters"/> on a completion item.</summary>
+        [JsonProperty]
+        public bool CommitCharactersSupport { get; set; }
+
+        /// <summary>
+        /// Client supports the follow content formats for the documentation
+        /// property.The order describes the preferred format of the client.
+        /// </summary>
+        [JsonProperty]
+        public IList<MarkupKind> DocumentationFormat { get; set; }
     }
+
+    [JsonObject(MemberSerialization.OptIn)]
+    public class TextDocumentCompletionItemKindCapability
+    {
+        /// <summary>
+        /// The completion item kind values the client supports. When this
+        /// property exists the client also guarantees that it will
+        /// handle values outside its set gracefully and falls back
+        /// to a default value when unknown.
+        /// </summary>
+        /// <remarks>
+        /// If this property is not present, the client only supports
+        /// the completion items kinds from `Text` to `Reference` as defined in
+        /// the initial version of the protocol.
+        /// </remarks>
+        [JsonProperty]
+        public IEnumerable<CompletionItemKind> ValueSet { get; set; }
+
+    }
+
+    /// <summary>
+    /// Capabilities specific to the `textDocument/hover`.
+    /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
+    public class TextDocumentHoverCapability : DynamicClientCapability
+    {
+        /// <summary>
+        /// Client supports the follow content formats for the content property.
+        /// The order describes the preferred format of the client.
+        /// </summary>
+        [JsonProperty]
+        public IList<MarkupKind> ContentFormat { get; set; }
+    }
+
+    /// <summary>
+    /// Capabilities specific to the `textDocument/signatureHelp`.
+    /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
+    public class TextDocumentSignatureHelpCapability : DynamicClientCapability
+    {
+        /// <summary>
+        /// The client supports the following <see cref="SignatureInformation"/> specific properties.
+        /// </summary>
+        [JsonProperty]
+        public TextDocumentSignatureInformationCapability SignatureInformation { get; set; }
+    }
+    
+    [JsonObject(MemberSerialization.OptIn)]
+    public class TextDocumentSignatureInformationCapability
+    {
+        /// <summary>
+        /// Client supports the follow content formats for the documentation
+        /// property. The order describes the preferred format of the client.
+        /// </summary>
+        [JsonProperty]
+        public IList<MarkupKind> DocumentationFormat { get; set; }
+    }
+
 }
