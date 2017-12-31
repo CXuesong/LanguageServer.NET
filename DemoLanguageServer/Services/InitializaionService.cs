@@ -26,7 +26,7 @@ namespace DemoLanguageServer.Services
                     OpenClose = true,
                     WillSave = true,
                     Change = TextDocumentSyncKind.Incremental
-                }
+                },
             });
         }
 

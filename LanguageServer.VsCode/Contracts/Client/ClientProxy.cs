@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using JsonRpc.DynamicProxy.Client;
 using JsonRpc.Standard.Client;
 
 namespace LanguageServer.VsCode.Contracts.Client
