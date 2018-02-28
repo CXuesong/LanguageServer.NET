@@ -1,4 +1,4 @@
-﻿#define WAIT_FOR_DEBUGGER
+﻿// #define WAIT_FOR_DEBUGGER
 
 using System;
 using System.Diagnostics;
