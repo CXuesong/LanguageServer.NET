@@ -10,7 +10,7 @@ import * as fs from "fs";
 // Defines the search path of your language server DLL. (.NET Core)
 const languageServerPaths = [
 	"server/DemoLanguageServer.dll",
-	"../../DemoLanguageServer/bin/Debug/netcoreapp1.1/DemoLanguageServer.dll",
+	"../../DemoLanguageServer/bin/Debug/netcoreapp2.0/DemoLanguageServer.dll",
 ]
 
 function activateLanguageServer(context: vscode.ExtensionContext) {
