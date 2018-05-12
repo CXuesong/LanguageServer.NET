@@ -12,5 +12,10 @@ namespace DemoLanguageServer
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
+
+        public static string GetTimeStamp()
+        {
+            return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+        }
     }
 }

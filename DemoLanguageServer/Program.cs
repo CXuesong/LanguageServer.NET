@@ -50,11 +50,11 @@ namespace DemoLanguageServer
                     // We want to capture log all the LSP server-to-client calls as well
                     clientHandler.MessageSending += (_, e) =>
                     {
-                        lock (logWriter) logWriter.WriteLine("<C{0}", e.Message);
+                        lock (logWriter) logWriter.WriteLine("{0} <C{1}", Utility.GetTimeStamp(), e.Message);
                     };
                     clientHandler.MessageReceiving += (_, e) =>
                     {
-                        lock (logWriter) logWriter.WriteLine(">C{0}", e.Message);
+                        lock (logWriter) logWriter.WriteLine("{0} >C{1}", Utility.GetTimeStamp(), e.Message);
                     };
                 }
                 // Configure & build service host
@@ -92,9 +92,9 @@ namespace DemoLanguageServer
                 // Log all the client-to-server calls.
                 builder.Intercept(async (context, next) =>
                 {
-                    lock (logWriter) logWriter.WriteLine("> {0}", context.Request);
+                    lock (logWriter) logWriter.WriteLine("{0} > {1}", Utility.GetTimeStamp(), context.Request);
                     await next();
-                    lock (logWriter) logWriter.WriteLine("< {0}", context.Response);
+                    lock (logWriter) logWriter.WriteLine("{0} < {1}", Utility.GetTimeStamp(), context.Response);
                 });
             }
             return builder.Build();
