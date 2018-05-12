@@ -2,7 +2,7 @@
 
 [![NuGet version (CXuesong.LanguageServer.VsCode)](https://img.shields.io/nuget/vpre/CXuesong.LanguageServer.VsCode.svg?style=flat-square)](https://www.nuget.org/packages/CXuesong.LanguageServer.VsCode) [![Gitter](https://badges.gitter.im/CXuesong/LanguageServer.NET.svg?style=flat-square)](https://gitter.im/CXuesong/LanguageServer.NET?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-A .NET implementation of [Language Server Protocol](https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md) infrastructure library for VSCode, and hopefully, might also be used with other IDEs that support Language Server Protocol. It supports LSP 2.0 and should support LSP 3.x (if not, please open an issue; thanks).
+A .NET server-side implementation of [Language Server Protocol](https://microsoft.github.io/language-server-protocol) infrastructure library for VSCode, and hopefully, might also be used with other IDEs that support Language Server Protocol. It supports LSP 2.0 and should support LSP 3.x (if not, please open an issue; thanks).
 
 ![Screenshot of DemoLanguageServer](README.resource/Screenshot.gif)
 
@@ -31,3 +31,9 @@ You may need Visual Studio 2017 to build the demo.
 To debug the server application, you may wish to turn `WAIT_FOR_DEBUGGER` conditional switch on in `DemoLanguageServer/Program.cs`. After starting up the Extension Development Host, and activating the language server, you may attach VS Debugger to `dotnet` process and go on debugging.
 
 You may also set the `default` value of `demoLanguageServer.trace.server` to `"messages"` in `package.json` to make language client show more debugging information.
+
+## Notes
+
+*   Though it's not mentioned in MS's official LSP documentation, by default VsCode uses stdin/stdout as JSON RPC transportation channel; thus it's important you SHOULD NOT read from/write to the console from your own code as long as the connection has been established, to avoid interfering the JSON RPC communication. 
+*   If you are using the LSP client library from [`vscode-languageserver-node`](vscode-languageserver-node), other transportation channels, such as named pipe (Windows) or Unix domain socket (Linux/MacOS) is possible via client-side configuration; though you will need to write your own server-side implementation.
+*   It's worthwhile to be noted that Unix domain socket has been introduced since Windows 10 Build 17063. However, there is currently no means to set up a Unix domain socket client in Node.JS on Windows. Thus it seems that, up till now, we still cannot use Unix domain socket as JSON RPC as transportation channel on Windows. See the tracking issue: [CXuesong/JsonRpc.Standard#4](https://github.com/CXuesong/JsonRpc.Standard/issues/4).
