@@ -68,7 +68,7 @@ namespace LanguageServer.VsCode.Contracts
         /// <summary>
         /// The server provides hover support.
         /// </summary>
-        public bool HoverProvider { get; set; }
+        public HoverOptions HoverProvider { get; set; }
 
         /// <summary>
         /// The server provides completion support.
@@ -81,34 +81,54 @@ namespace LanguageServer.VsCode.Contracts
         public SignatureHelpOptions SignatureHelpProvider { get; set; }
 
         /// <summary>
+        /// The server provides go to declaration support. (LSP 3.14)
+        /// </summary>
+        public DeclarationOptions DeclarationProvider { get; set; }
+
+        /// <summary>
         /// The server provides goto definition support.
         /// </summary>
-        public bool DefinitionProvider { get; set; }
+        public DefinitionOptions DefinitionProvider { get; set; }
+
+        /// <summary>
+        /// The server provides goto type definition support. (LSP 3.6)
+        /// </summary>
+        public TypeDefinitionOptions TypeDefinitionProvider { get; set; }
+
+        /// <summary>
+        /// The server provides goto implementation support. (LSP 3.6)
+        /// </summary>
+        public ImplementationOptions ImplementationProvider { get; set; }
 
         /// <summary>
         /// The server provides find references support.
         /// </summary>
-        public bool ReferencesProvider { get; set; }
+        public ReferenceOptions ReferencesProvider { get; set; }
 
         /// <summary>
         /// The server provides document highlight support.
         /// </summary>
-        public bool DocumentHighlightProvider { get; set; }
+        public DocumentHighlightOptions DocumentHighlightProvider { get; set; }
 
         /// <summary>
         /// The server provides document symbol support.
         /// </summary>
-        public bool DocumentSymbolProvider { get; set; }
+        public DocumentSymbolOptions DocumentSymbolProvider { get; set; }
 
         /// <summary>
         /// The server provides workspace symbol support.
         /// </summary>
-        public bool WorkspaceSymbolProvider { get; set; }
+        public WorkspaceSymbolOptions WorkspaceSymbolProvider { get; set; }
 
         /// <summary>
         /// The server provides code actions.
         /// </summary>
-        public bool CodeActionProvider { get; set; }
+        /// <remarks>
+        /// The <see cref="CodeActionOptions"/> return type is only
+        /// valid if the client signals code action literal support via the property
+        /// <c>textDocument.codeAction.codeActionLiteralSupport</c>.
+        /// </remarks>
+        public CodeActionOptions CodeActionProvider { get; set; }
 
         /// <summary>
         /// The server provides code lens.
@@ -116,14 +136,24 @@ namespace LanguageServer.VsCode.Contracts
         public CodeLensOptions CodeLensProvider { get; set; }
 
         /// <summary>
+        /// The server provides document link support.
+        /// </summary>
+        public DocumentLinkOptions DocumentLinkProvider { get; set; }
+
+        /// <summary>
+        /// The server provides color provider support. (LSP 3.6)
+        /// </summary>
+        public DocumentColorOptions ColorProvider { get; set; }
+
+        /// <summary>
         /// The server provides document formatting.
         /// </summary>
-        public bool DocumentFormattingProvider { get; set; }
+        public DocumentFormattingOptions DocumentFormattingProvider { get; set; }
 
         /// <summary>
         /// The server provides document range formatting.
         /// </summary>
-        public bool DocumentRangeFormattingProvider { get; set; }
+        public DocumentRangeFormattingOptions DocumentRangeFormattingProvider { get; set; }
 
         /// <summary>
         /// The server provides document formatting on typing.
@@ -133,17 +163,22 @@ namespace LanguageServer.VsCode.Contracts
         /// <summary>
         /// The server provides rename support.
         /// </summary>
-        public bool RenameProvider { get; set; }
+        public RenameOptions RenameProvider { get; set; }
 
         /// <summary>
-        /// The server provides document link support.
+        /// The server provides folding provider support. (LSP 3.10)
         /// </summary>
-        public DocumentLinkOptions DocumentLinkProvider { get; set; }
+        public FoldingRangeOptions FoldingRangeProvider { get; set; }
 
         /// <summary>
         /// The server provides execute command support.
         /// </summary>
         public ExecuteCommandOptions ExecuteCommandProvider { get; set; }
+
+        /// <summary>
+        /// The server provides selection range support. (LSP 3.15)
+        /// </summary>
+        public SelectionRangeOptions SelectionRangeProvider { get; set; }
 
         /// <summary>
         /// Workspace specific server capabilities.
@@ -157,10 +192,23 @@ namespace LanguageServer.VsCode.Contracts
     }
 
     /// <summary>
+    /// Options to signal work done progress support in server capabilities. (LSP 3.15)
+    /// </summary>
+    public interface IWorkDoneProgressOptions
+    {
+
+        /// <summary>
+        /// Signals work done progress support in server capabilities. (LSP 3.15)
+        /// </summary>
+        bool WorkDoneProgress { get; set; }
+
+    }
+
+    /// <summary>
     /// Signature help options.
     /// </summary>
-    [JsonObject(MemberSerialization.OptIn)]
-    public class SignatureHelpOptions
+    [JsonObject]
+    public class SignatureHelpOptions : IWorkDoneProgressOptions
     {
         public SignatureHelpOptions()
         {
@@ -175,14 +223,40 @@ namespace LanguageServer.VsCode.Contracts
         /// <summary>
         /// The characters that trigger signature help automatically.
         /// </summary>
-        [JsonProperty]
         public IEnumerable<char> TriggerCharacters { get; set; }
+
+        /// <inheritdoc />
+        public bool WorkDoneProgress { get; set; }
+    }
+
+    [JsonObject]
+    public class DocumentSymbolOptions : IWorkDoneProgressOptions
+    {
+        /// <inheritdoc />
+        public bool WorkDoneProgress { get; set; }
+    }
+
+    [JsonObject]
+    public class CodeActionOptions : IWorkDoneProgressOptions
+    {
+
+        /// <summary>
+        /// <see cref="CodeActionKind"/>s that this server may return.
+        /// </summary>
+        /// <remarks>
+        /// The list of kinds may be generic, such as <see cref="CodeActionKind.Refactor"/>, or the server
+        /// may list out every specific kind they provide.
+        /// </remarks>
+        public ICollection<string> CodeActionKinds { get; set; }
+
+        /// <inheritdoc />
+        public bool WorkDoneProgress { get; set; }
     }
 
     /// <summary>
     /// Code Lens options.
     /// </summary>
-    [JsonObject(MemberSerialization.OptIn)]
+    [JsonObject]
     public class CodeLensOptions
     {
         public CodeLensOptions()
@@ -198,10 +272,16 @@ namespace LanguageServer.VsCode.Contracts
         /// <summary>
         /// Code lens has a resolve provider as well.
         /// </summary>
-        [JsonProperty]
         public bool ResolveProvider { get; set; }
     }
 
+    [JsonObject]
+    public class WorkspaceSymbolOptions : IWorkDoneProgressOptions
+    {
+        /// <inheritdoc />
+        public bool WorkDoneProgress { get; set; }
+    }
+    
     /// <summary>
     /// Format document on type options.
     /// </summary>
@@ -255,15 +335,55 @@ namespace LanguageServer.VsCode.Contracts
         public bool ResolveProvider { get; set; }
     }
 
+    [JsonObject]
+    public class DocumentColorOptions : IWorkDoneProgressOptions
+    {
+        /// <inheritdoc />
+        public bool WorkDoneProgress { get; set; }
+    }
+
+    [JsonObject]
+    public class DocumentFormattingOptions : IWorkDoneProgressOptions
+    {
+        /// <inheritdoc />
+        public bool WorkDoneProgress { get; set; }
+    }
+
+    [JsonObject]
+    public class DocumentRangeFormattingOptions : IWorkDoneProgressOptions
+    {
+        /// <inheritdoc />
+        public bool WorkDoneProgress { get; set; }
+    }
+
+
+    [JsonObject]
+    public class RenameOptions : IWorkDoneProgressOptions
+    {
+        /// <summary>
+        /// Renames should be checked and tested before being executed.
+        /// </summary>
+        public bool PrepareProvider { get; set; }
+
+        /// <inheritdoc />
+        public bool WorkDoneProgress { get; set; }
+    }
+
+    [JsonObject]
+    public class FoldingRangeOptions : IWorkDoneProgressOptions
+    {
+        /// <inheritdoc />
+        public bool WorkDoneProgress { get; set; }
+    }
+
     /// <summary>
     /// Signature help options.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public class ExecuteCommandOptions
+    public class ExecuteCommandOptions : IWorkDoneProgressOptions
     {
         public ExecuteCommandOptions()
         {
-
         }
 
         public ExecuteCommandOptions(IEnumerable<string> commands)
@@ -276,6 +396,17 @@ namespace LanguageServer.VsCode.Contracts
         /// </summary>
         [JsonProperty]
         public IEnumerable<string> Commands { get; set; }
+
+        /// <inheritdoc />
+        [JsonProperty]
+        public bool WorkDoneProgress { get; set; }
+    }
+
+    [JsonObject]
+    public class SelectionRangeOptions : IWorkDoneProgressOptions
+    {
+        /// <inheritdoc />
+        public bool WorkDoneProgress { get; set; }
     }
 
     /// <summary>
@@ -334,6 +465,13 @@ namespace LanguageServer.VsCode.Contracts
         public SaveOptions Save { get; set; }
     }
 
+    [JsonObject]
+    public class HoverOptions : IWorkDoneProgressOptions
+    {
+        /// <inheritdoc />
+        public bool WorkDoneProgress { get; set; }
+    }
+
     /// <summary>
     /// Save options.
     /// </summary>
@@ -362,7 +500,7 @@ namespace LanguageServer.VsCode.Contracts
     /// Completion options.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public class CompletionOptions
+    public class CompletionOptions : IWorkDoneProgressOptions
     {
 
         [JsonConstructor]
@@ -393,6 +531,52 @@ namespace LanguageServer.VsCode.Contracts
         /// </summary>
         [JsonProperty]
         public IEnumerable<char> TriggerCharacters { get; set; }
+
+        /// <inheritdoc />
+        [JsonProperty]
+        public bool WorkDoneProgress { get; set; }
+    }
+
+    [JsonObject]
+    public class DeclarationOptions : IWorkDoneProgressOptions
+    {
+        /// <inheritdoc />
+        public bool WorkDoneProgress { get; set; }
+    }
+
+    [JsonObject]
+    public class DefinitionOptions : IWorkDoneProgressOptions
+    {
+        /// <inheritdoc />
+        public bool WorkDoneProgress { get; set; }
+    }
+
+    [JsonObject]
+    public class TypeDefinitionOptions : IWorkDoneProgressOptions
+    {
+        /// <inheritdoc />
+        public bool WorkDoneProgress { get; set; }
+    }
+
+    [JsonObject]
+    public class ImplementationOptions : IWorkDoneProgressOptions
+    {
+        /// <inheritdoc />
+        public bool WorkDoneProgress { get; set; }
+    }
+
+    [JsonObject]
+    public class ReferenceOptions : IWorkDoneProgressOptions
+    {
+        /// <inheritdoc />
+        public bool WorkDoneProgress { get; set; }
+    }
+
+    [JsonObject]
+    public class DocumentHighlightOptions : IWorkDoneProgressOptions
+    {
+        /// <inheritdoc />
+        public bool WorkDoneProgress { get; set; }
     }
 
     /// <summary>

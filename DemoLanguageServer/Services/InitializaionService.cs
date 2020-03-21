@@ -18,7 +18,7 @@ namespace DemoLanguageServer.Services
         {
             return new InitializeResult(new ServerCapabilities
             {
-                HoverProvider = true,
+                HoverProvider = new HoverOptions(),
                 SignatureHelpProvider = new SignatureHelpOptions("()"),
                 CompletionProvider = new CompletionOptions(true, "."),
                 TextDocumentSync = new TextDocumentSyncOptions
