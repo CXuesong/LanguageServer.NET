@@ -10,10 +10,10 @@
     },
     "license": "MIT",
     "engines": {
-        "vscode": "^1.19.x"
+        "vscode": "^1.33.0"
     },
     "categories": [
-        "Languages",
+        "Programming Languages",
         "Linters"
     ],
     "activationEvents": [
@@ -62,22 +62,21 @@
             }
         }
     },
-    "extensionDependencies": [
-    ],
+    "extensionDependencies": [],
     "scripts": {
-        "vscode:prepublish": "tsc -p ./",
-        "compile": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "node ./node_modules/vscode/bin/test"
+        "compile": "tsc -b",
+        "watch": "tsc -b -w",
+        "test": "mocha --require ts-node/register --timeout 3600000 test/**/*.test.ts"
     },
     "devDependencies": {
-        "typescript": "^2.5.2",
-        "vscode": "^1.1.5",
-        "mocha": "^2.3.3",
-        "@types/node": "^6.0.40",
-        "@types/mocha": "^2.2.32"
+        "typescript": "^3.8.3",
+        "tslint": "^6.1.0",
+        "@types/vscode": "^1.43.0",
+        "mocha": "^7.1.1",
+        "@types/node": "^13.9.2",
+        "@types/mocha": "^7.0.2"
     },
     "dependencies": {
-        "vscode-languageclient": "^3.4.2"
+        "vscode-languageclient": "^6.1.3"
     }
 }
