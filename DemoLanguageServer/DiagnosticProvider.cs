@@ -14,8 +14,7 @@ namespace DemoLanguageServer
         {
 
         }
-
-
+        
         private static readonly string[] Keywords =
             {".NET Framework", ".NET Core", ".NET Standard", ".NET Compact", ".NET"};
 

@@ -21,8 +21,7 @@ namespace DemoLanguageServer
 
         public LanguageServerSession(JsonRpcClient rpcClient, IJsonRpcContractResolver contractResolver)
         {
-            if (rpcClient == null) throw new ArgumentNullException(nameof(rpcClient));
-            RpcClient = rpcClient;
+            RpcClient = rpcClient ?? throw new ArgumentNullException(nameof(rpcClient));
             var builder = new JsonRpcProxyBuilder {ContractResolver = contractResolver};
             Client = new ClientProxy(builder, rpcClient);
             Documents = new ConcurrentDictionary<Uri, SessionDocument>();

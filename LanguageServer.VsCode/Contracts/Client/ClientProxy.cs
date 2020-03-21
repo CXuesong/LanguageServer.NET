@@ -21,10 +21,8 @@ namespace LanguageServer.VsCode.Contracts.Client
         /// <exception cref="ArgumentNullException">Either <paramref name="proxyBuilder"/> or <paramref name="rpcClient"/> is <c>null</c>.</exception>
         public ClientProxy(JsonRpcProxyBuilder proxyBuilder, JsonRpcClient rpcClient)
         {
-            if (proxyBuilder == null) throw new ArgumentNullException(nameof(proxyBuilder));
-            if (rpcClient == null) throw new ArgumentNullException(nameof(rpcClient));
-            ProxyBuilder = proxyBuilder;
-            RpcClient = rpcClient;
+            ProxyBuilder = proxyBuilder ?? throw new ArgumentNullException(nameof(proxyBuilder));
+            RpcClient = rpcClient ?? throw new ArgumentNullException(nameof(rpcClient));
             _Client = new Lazy<IClient>(() => ProxyBuilder.CreateProxy<IClient>(RpcClient));
             _Document = new Lazy<IDocument>(() => ProxyBuilder.CreateProxy<IDocument>(RpcClient));
             _Telemetry = new Lazy<ITelemetry>(() => ProxyBuilder.CreateProxy<ITelemetry>(RpcClient));

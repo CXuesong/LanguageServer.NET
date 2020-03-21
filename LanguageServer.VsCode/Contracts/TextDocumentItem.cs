@@ -52,8 +52,8 @@ namespace LanguageServer.VsCode.Contracts
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            return obj is TextDocumentIdentifier && Equals((TextDocumentIdentifier) obj);
+            if (obj is null) return false;
+            return obj is TextDocumentIdentifier other && Equals(other);
         }
 
         /// <inheritdoc />
@@ -99,7 +99,7 @@ namespace LanguageServer.VsCode.Contracts
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (obj is null) return false;
             return obj is VersionedTextDocumentIdentifier && Equals((VersionedTextDocumentIdentifier) obj);
         }
 

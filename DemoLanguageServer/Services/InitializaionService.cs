@@ -5,7 +5,6 @@ using JsonRpc.Contracts;
 using JsonRpc.Messages;
 using JsonRpc.Server;
 using LanguageServer.VsCode.Contracts;
-using LanguageServer.VsCode.Contracts.Client;
 using Newtonsoft.Json.Linq;
 
 namespace DemoLanguageServer.Services

@@ -79,7 +79,7 @@ namespace LanguageServer.VsCode.Contracts
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (obj is null) return false;
             return obj is Range && Equals((Range) obj);
         }
 
