@@ -93,7 +93,7 @@ namespace DemoLanguageServer.Services
         };
 
         [JsonRpcMethod]
-        public CompletionList Completion(TextDocumentIdentifier textDocument, Position position)
+        public CompletionList Completion(TextDocumentIdentifier textDocument, Position position, CompletionContext context)
         {
             return new CompletionList(PredefinedCompletionItems);
         }
