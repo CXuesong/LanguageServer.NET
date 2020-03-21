@@ -15,6 +15,48 @@ namespace LanguageServer.VsCode.Contracts
     public class MarkupContent
     {
 
+        /// <summary>
+        /// Creates a <see cref="MarkupContent"/> with plaintext content.
+        /// </summary>
+        public static MarkupContent PlainText(string value) => new MarkupContent(MarkupKind.PlainText, value);
+
+        /// <summary>
+        /// Creates a <see cref="MarkupContent"/> with markdown content.
+        /// </summary>
+        public static MarkupContent Markdown(string value) => new MarkupContent(MarkupKind.Markdown, value);
+
+        /// <summary>
+        /// Creates a <see cref="MarkupContent"/> with a code snippet in the given language.
+        /// This is equivalent to the deprecated <c>MarkedString</c>.
+        /// </summary>
+        /// <param name="language">the code language.</param>
+        /// <param name="value">the code.</param>
+        /// <remarks>
+        /// <para><c>MarkedString</c> can be used to render human readable text. It is either a markdown string
+        /// or a code-block that provides a language and a code snippet. The language identifier
+        /// is semantically equal to the optional language identifier in fenced code blocks in GitHub
+        /// issues. See https://help.github.com/articles/creating-and-highlighting-code-blocks/#syntax-highlighting</para>
+        /// <para>We still keep this overload in LanguageServer.NET in order to facilitate the code snippet construction.</para>
+        /// </remarks>
+#if BCL_FEATURE_SPAN
+        public static MarkupContent MarkedString(string language, string value) => MarkedString(language, value.AsSpan());
+
+        /// <inheritdoc cref="MarkedString(string,string)"/>
+        public static MarkupContent MarkedString(string language, ReadOnlySpan<char> value)
+#else
+        public static MarkupContent MarkedString(string language, string value)
+#endif
+        {
+            var sb = new StringBuilder(language.Length + value.Length + 10);
+            sb.Append('`', 4);
+            sb.Append(language);
+            sb.Append('\n');
+            sb.Append(value);
+            sb.Append('\n');
+            sb.Append('`', 4);
+            return new MarkupContent(MarkupKind.Markdown, sb.ToString());
+        }
+
         /// <exception cref="ArgumentNullException"><paramref name="kind"/> is <c>null</c>.</exception>
         public MarkupContent(MarkupKind kind, string value)
         {
@@ -30,6 +72,11 @@ namespace LanguageServer.VsCode.Contracts
         [JsonProperty]
         public string Value { get; }
 
+        /// <summary>
+        /// Implicitly converts string into <see cref="MarkupContent"/> with <see cref="PlainText"/>.
+        /// </summary>
+        public static implicit operator MarkupContent(string value) => PlainText(value);
+
     }
 
     /// <summary>
@@ -37,7 +84,7 @@ namespace LanguageServer.VsCode.Contracts
     /// result literals like <see cref="Hover"/>, <see cref="ParameterInformation"/> or <see cref="CompletionItem"/>.
     /// </summary>
     /// <remarks>
-    /// Please note that <see cref="MarkupKind"/> must not start with a `$`. This kinds
+    /// Please note that <see cref="MarkupKind"/> must not start with a <c>$</c>. This kinds
     /// are reserved for internal usage.
     /// </remarks>
     [JsonConverter(typeof(MarkupKindJsonConverter))]
@@ -47,7 +94,7 @@ namespace LanguageServer.VsCode.Contracts
         /// <summary>
         /// Plain text is supported as a content format.
         /// </summary>
-        public static MarkupKind PlainText{ get; } = new MarkupKind("plaintext");
+        public static MarkupKind PlainText { get; } = new MarkupKind("plaintext");
 
         /// <summary>
         /// Markdown is supported as a content format.

@@ -6,6 +6,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using LanguageServer.VsCode.Contracts;
+#if BCL_FEATURE_SPAN
+using Range = LanguageServer.VsCode.Contracts.Range;
+#endif
 
 namespace LanguageServer.VsCode.Server
 {

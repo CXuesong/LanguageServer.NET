@@ -100,7 +100,7 @@ namespace LanguageServer.VsCode.Contracts
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
-            return obj is VersionedTextDocumentIdentifier && Equals((VersionedTextDocumentIdentifier) obj);
+            return obj is VersionedTextDocumentIdentifier other && Equals(other);
         }
 
         /// <inheritdoc />
@@ -110,6 +110,16 @@ namespace LanguageServer.VsCode.Contracts
             {
                 return ((Uri != null ? Uri.GetHashCode() : 0) * 397) ^ Version;
             }
+        }
+
+        public static bool operator ==(VersionedTextDocumentIdentifier left, VersionedTextDocumentIdentifier right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(VersionedTextDocumentIdentifier left, VersionedTextDocumentIdentifier right)
+        {
+            return !(left == right);
         }
     }
 }

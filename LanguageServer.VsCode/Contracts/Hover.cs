@@ -15,11 +15,11 @@ namespace LanguageServer.VsCode.Contracts
             
         }
 
-        public Hover(string contents) : this(contents, new Range())
+        public Hover(MarkupContent contents) : this(contents, new Range())
         {
         }
 
-        public Hover(string contents, Range range)
+        public Hover(MarkupContent contents, Range range)
         {
             Contents = contents;
             Range = range;
@@ -29,10 +29,11 @@ namespace LanguageServer.VsCode.Contracts
         /// A Markdown string to display in the Hover.
         /// </summary>
         [JsonProperty]
-        public string Contents { get; set; }
+        public MarkupContent Contents { get; set; }
 
         /// <summary>
-        /// The range to which this Hover applies.
+        /// An optional range that is a range inside a text document.
+        /// that is used to visualize a hover, e.g. by changing the background color.
         /// </summary>
         [JsonProperty]
         public Range Range { get; set; }

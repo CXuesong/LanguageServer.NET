@@ -111,7 +111,7 @@ namespace LanguageServer.VsCode.Contracts
         {
         }
 
-        public CompletionItem(string label, CompletionItemKind kind, string detail, string documentation, JToken data)
+        public CompletionItem(string label, CompletionItemKind kind, string detail, MarkupContent documentation, JToken data)
         {
             Label = label;
             Kind = kind;
@@ -146,10 +146,10 @@ namespace LanguageServer.VsCode.Contracts
         /// A human-readable string that represents a doc-comment.
         /// </summary>
         [JsonProperty]
-        public string Documentation { get; set; }
+        public MarkupContent Documentation { get; set; }
 
         /// <summary>
-        /// A string that shoud be used when comparing this item
+        /// A string that should be used when comparing this item
         /// with other items. When `falsy` the label is used.
         /// </summary>
         [JsonProperty]

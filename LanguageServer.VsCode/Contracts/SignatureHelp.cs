@@ -44,7 +44,7 @@ namespace LanguageServer.VsCode.Contracts
         /// make an active decision about the active signature and shouldn't 
         /// rely on a default value.
         /// In future version of the protocol this property might become
-        /// mandantory to better express this.
+        /// mandatory to better express this.
         /// </summary>
         [JsonProperty]
         public int ActiveSignature { get; set; }
@@ -55,7 +55,7 @@ namespace LanguageServer.VsCode.Contracts
         /// defaults to 0 if the active signature has parameters. If 
         /// the active signature has no parameters it is ignored. 
         /// In future version of the protocol this property might become
-        /// mandantory to better express the active parameter if the
+        /// mandatory to better express the active parameter if the
         /// active signature does have any.
         /// </summary>
         [JsonProperty]
@@ -81,11 +81,11 @@ namespace LanguageServer.VsCode.Contracts
         {
         }
 
-        public SignatureInformation(string label, string documentation) : this(label, documentation, null)
+        public SignatureInformation(string label, MarkupContent documentation) : this(label, documentation, null)
         {
         }
 
-        public SignatureInformation(string label, string documentation, IList<ParameterInformation> parameters)
+        public SignatureInformation(string label, MarkupContent documentation, IList<ParameterInformation> parameters)
         {
             Label = label;
             Documentation = documentation;
@@ -104,7 +104,7 @@ namespace LanguageServer.VsCode.Contracts
         /// in the UI but can be omitted.
         /// </summary>
         [JsonProperty]
-        public string Documentation { get; set; }
+        public MarkupContent Documentation { get; set; }
 
         /// <summary>
         /// The parameters of this signature.
@@ -127,7 +127,11 @@ namespace LanguageServer.VsCode.Contracts
 
         }
 
-        public ParameterInformation(string label, string documentation)
+        public ParameterInformation(string label) : this(label, null)
+        {
+        }
+
+        public ParameterInformation(string label, MarkupContent documentation)
         {
             Label = label;
             Documentation = documentation;
@@ -145,11 +149,11 @@ namespace LanguageServer.VsCode.Contracts
         /// in the UI but can be omitted.
         /// </summary>
         [JsonProperty]
-        public string Documentation { get; set; }
+        public MarkupContent Documentation { get; set; }
     }
 
     /// <summary>
-    /// Descibe options to be used when registered for signature help events.
+    /// Describe options to be used when registered for signature help events.
     /// </summary>
     public class SignatureHelpRegistrationOptions : TextDocumentRegistrationOptions
     {

@@ -1,14 +1,23 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace LanguageServer.VsCode.Contracts
 {
     /// <summary>
     /// A textual edit operation applicable to a text document.
     /// </summary>
+    [JsonObject]
     public class TextEdit
     {
+
+        public TextEdit(Range range, string newText)
+        {
+            Range = range;
+            NewText = newText;
+        }
+
         /// <summary>
         /// The range of the text document to be manipulated. To insert
         /// text into a document create a range where start === end.
@@ -27,8 +36,16 @@ namespace LanguageServer.VsCode.Contracts
     /// The text document is referred to as a <see cref="VersionedTextDocumentIdentifier"/> to allow clients
     /// to check the text document version before an edit is applied.
     /// </summary>
+    [JsonObject]
     public class TextDocumentEdit
     {
+
+        public TextDocumentEdit(VersionedTextDocumentIdentifier textDocument, ICollection<TextEdit> edits)
+        {
+            TextDocument = textDocument;
+            Edits = edits;
+        }
+
         /// <summary>
         /// The text document to change.
         /// </summary>
@@ -46,8 +63,25 @@ namespace LanguageServer.VsCode.Contracts
     /// If <see cref="DocumentChanges"/> are present they are preferred over <see cref="Changes"/>
     /// if the client can handle versioned document edits.
     /// </summary>
+    [JsonObject]
     public class WorkspaceEdit
     {
+
+        public WorkspaceEdit(IDictionary<Uri, ICollection<TextEdit>> changes) : this(null, changes)
+        {
+        }
+
+        public WorkspaceEdit(ICollection<TextDocumentEdit> documentChanges) : this(documentChanges, null)
+        {
+        }
+
+        [JsonConstructor]
+        public WorkspaceEdit(ICollection<TextDocumentEdit> documentChanges, IDictionary<Uri, ICollection<TextEdit>> changes)
+        {
+            DocumentChanges = documentChanges;
+            Changes = changes;
+        }
+
         /// <summary>
         /// Holds changes to existing resources.
         /// </summary>
@@ -56,7 +90,7 @@ namespace LanguageServer.VsCode.Contracts
         /// <summary>
         /// An array of `TextDocumentEdit`s to express changes to specific a specific
         /// version of a text document. Whether a client supports versioned document
-        /// edits is expressed via `WorkspaceClientCapabilites.versionedWorkspaceEdit`.
+        /// edits is expressed via `WorkspaceClientCapabilities.versionedWorkspaceEdit`.
         /// </summary>
         public ICollection<TextDocumentEdit> DocumentChanges { get; set; }
     }
