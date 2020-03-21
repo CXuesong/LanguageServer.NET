@@ -66,5 +66,9 @@ namespace LanguageServer.VsCode.Contracts
         /// of the <see cref="CompletionRegistrationOptions"/>.
         /// </summary>
         TriggerCharacter = 2,
+        /// <summary>
+        /// Completion was re-triggered as the current completion list is incomplete.
+        /// </summary>
+        TriggerForIncompleteCompletions = 3,
     }
 }
