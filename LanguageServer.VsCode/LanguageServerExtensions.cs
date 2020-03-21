@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using JsonRpc.Standard;
-using JsonRpc.Standard.Server;
+using JsonRpc.Messages;
+using JsonRpc.Server;
 
 namespace LanguageServer.VsCode
 {

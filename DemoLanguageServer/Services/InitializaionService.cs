@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
-using JsonRpc.Standard;
-using JsonRpc.Standard.Contracts;
-using JsonRpc.Standard.Server;
+using JsonRpc;
+using JsonRpc.Contracts;
+using JsonRpc.Messages;
+using JsonRpc.Server;
 using LanguageServer.VsCode.Contracts;
 using LanguageServer.VsCode.Contracts.Client;
 using Newtonsoft.Json.Linq;
 
 namespace DemoLanguageServer.Services
 {
-    public class InitializaionService : DemoLanguageServiceBase
+    public class InitializationService : DemoLanguageServiceBase
     {
 
         [JsonRpcMethod(AllowExtensionData = true)]

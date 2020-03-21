@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using JsonRpc.DynamicProxy.Client;
-using JsonRpc.Standard.Client;
+using JsonRpc.Client;
 
 namespace LanguageServer.VsCode.Contracts.Client
 {
@@ -13,7 +13,7 @@ namespace LanguageServer.VsCode.Contracts.Client
     {
 
         /// <summary>
-        /// Initializes a client-side proxy method aggreator instance with specified
+        /// Initializes a client-side proxy method aggregator instance with specified
         /// <see cref="JsonRpcProxyBuilder"/> and <see cref="JsonRpcClient"/>.
         /// </summary>
         /// <param name="proxyBuilder">The builder used to build implementations for the stub interfaces.</param>

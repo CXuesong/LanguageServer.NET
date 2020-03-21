@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using JsonRpc.Standard.Contracts;
+using JsonRpc.Contracts;
 using Newtonsoft.Json;
 
 namespace LanguageServer.VsCode.Contracts.Client

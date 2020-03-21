@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using JsonRpc.Standard.Contracts;
+using JsonRpc.Contracts;
 using LanguageServer.VsCode.Contracts;
 
 namespace DemoLanguageServer.Services

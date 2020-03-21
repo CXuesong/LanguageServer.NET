@@ -6,10 +6,10 @@
     <PackageId>CXuesong.LanguageServer.VsCode</PackageId>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>CXuesong</Authors>
-    <Version>0.2</Version>
+    <Version>0.3</Version>
     <Company />
     <Description>A .NET Language Server infrastructure library for VSCode.</Description>
-    <Copyright>Copyright 2017 CXuesong</Copyright>
+    <Copyright>Copyright 2020 CXuesong</Copyright>
     <PackageTags>vscode language-server language-server-protocol</PackageTags>
     <NeutralLanguage>en-us</NeutralLanguage>
     <PackageProjectUrl>https://github.com/CXuesong/LanguageServer.NET</PackageProjectUrl>
@@ -21,6 +21,7 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../LanguageServer.snk</AssemblyOriginatorKeyFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,8 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CXuesong.JsonRpc.DynamicProxy" Version="0.4.0" />
-    <PackageReference Include="CXuesong.JsonRpc.Standard" Version="0.4.0" />
+    <PackageReference Include="CXuesong.JsonRpc.DynamicProxy" Version="0.5.3" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
   </ItemGroup>
 

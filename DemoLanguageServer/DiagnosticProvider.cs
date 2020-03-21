@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using LanguageServer.VsCode.Contracts;
 using LanguageServer.VsCode.Server;
+using Range = LanguageServer.VsCode.Contracts.Range;
 
 namespace DemoLanguageServer
 {
