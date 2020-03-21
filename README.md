@@ -10,19 +10,27 @@ Based on [CXuesong/JsonRpc.Standard](https://github.com/CXuesong/JsonRpc.Standar
 
 For an actual (WIP) [Wikitext](https://en.wikipedia.org/wiki/Wiki_markup) language server based on this library, please take a look at [CXuesong/MwLanguageServer](https://github.com/CXuesong/MwLanguageServer).
 
-The library is now available on NuGet. To install the package, run the following command in the Package Manager Console
+The library is now available on NuGet. To install the package, run the following command 
 
 ```powershell
+# Package Manager Console
 Install-Package CXuesong.LanguageServer.VsCode -Pre
+# dotnet CLI
+dotnet add package CXuesong.LanguageServer.VsCode -Pre
 ```
 
 ## To set up the demo
 
-You may need Visual Studio 2017 to build the demo.
+### Prerequesites
+* .NET Core SDK 3.1
+* yarn (or npm)
+
+### Steps
 
 1.  Open `DemoLanguageServer` in VS, choose `Debug` profile, and build the project.
+    * Alternatively, run `dotnet build` under `DemoLanguageServe` folder.
 2.  Open `Client\VsCode` folder in VSCode.
-3.  Run `npm install` in the terminal.
+3.  Run `yarn install` in the terminal.
 4.  Press F5 and a new VSCode window (Extension Development Host) should show.
 5.  Open a folder in the new VSCode window, and create a new file.
 6.  Change the file language to `Demo Language`
