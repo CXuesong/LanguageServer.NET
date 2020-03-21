@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using JsonRpc;
 using JsonRpc.Messages;
+using LanguageServer.VsCode.Contracts.Client;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -143,6 +144,11 @@ namespace LanguageServer.VsCode.Contracts
         /// The server provides execute command support.
         /// </summary>
         public ExecuteCommandOptions ExecuteCommandProvider { get; set; }
+
+        /// <summary>
+        /// Workspace specific server capabilities.
+        /// </summary>
+        public WorkspaceOptions Workspace { get; set; }
 
         /// <summary>
         /// Experimental server capabilities.
@@ -303,7 +309,7 @@ namespace LanguageServer.VsCode.Contracts
         public bool OpenClose { get; set; }
 
         /// <summary>
-        /// Change notificatins are sent to the server. See TextDocumentSyncKind.None, TextDocumentSyncKind.Full
+        /// Change notifications are sent to the server. See TextDocumentSyncKind.None, TextDocumentSyncKind.Full
         /// and TextDocumentSyncKind.Incremental.
         /// </summary>
         [JsonProperty]
@@ -388,4 +394,41 @@ namespace LanguageServer.VsCode.Contracts
         [JsonProperty]
         public IEnumerable<char> TriggerCharacters { get; set; }
     }
+
+    /// <summary>
+    /// Workspace specific server capabilities.
+    /// </summary>
+    [JsonObject]
+    public class WorkspaceOptions
+    {
+        /// <summary>
+        /// The server supports workspace folder. (LSP 3.6)
+        /// </summary>
+        private WorkspaceFoldersServerCapabilities WorkspaceFolders { get; set; }
+    }
+
+    /// <summary>
+    /// The server supports workspace folder. (LSP 3.6)
+    /// </summary>
+    [JsonObject]
+    public class WorkspaceFoldersServerCapabilities
+    {
+        /// <summary>
+        /// Whether the server has support for workspace folders.
+        /// </summary>
+        [JsonProperty]
+        public bool Supported { get; set; }
+
+        /// <summary>
+        /// (<c>changeNotifications</c>) When specified, indicates the server wants to receive workspace folder change notifications.
+        /// </summary>
+        /// <value>
+        /// <c>null</c> to indicate the server does not want to receive workspace folder change notifications.
+        /// Or a string containing an ID under which the notification is registered on the client side.
+        /// The ID can be used to unregister for these events using the <c>client/unregisterCapability</c> request (<see cref="IClient.UnregisterCapability"/>).
+        /// </value>
+        [JsonProperty("changeNotifications")]
+        public string ChangeNotificationId { get; set; }
+    }
+
 }
