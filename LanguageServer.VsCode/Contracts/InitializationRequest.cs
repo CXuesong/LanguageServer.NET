@@ -48,19 +48,19 @@ namespace LanguageServer.VsCode.Contracts
         /// Workspace specific client capabilities.
         /// </summary>
         [JsonProperty]
-        public WorkspaceCapability Workspace { get; set; }
+        public WorkspaceClientCapability Workspace { get; set; }
 
         /// <summary>
         /// Text document specific client capabilities.
         /// </summary>
         [JsonProperty]
-        public TextDocumentCapability TextDocument { get; set; }
+        public TextDocumentClientCapabilities TextDocument { get; set; }
 
         /// <summary>
         /// Window specific client capabilities.
         /// </summary>
         [JsonProperty]
-        public WindowCapability Window { get; set; }
+        public WindowClientCapability Window { get; set; }
 
         /// <summary>
         /// Experimental client capabilities.
@@ -73,7 +73,7 @@ namespace LanguageServer.VsCode.Contracts
     /// Defines capabilities the editor / tool provides on the workspace.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public class WorkspaceCapability
+    public class WorkspaceClientCapability
     {
         /// <summary>
         /// The client supports applying batch edits to the workspace by supporting
@@ -130,7 +130,7 @@ namespace LanguageServer.VsCode.Contracts
     /// Defines capabilities the editor / tool provides on text documents.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public class TextDocumentCapability
+    public class TextDocumentClientCapabilities
     {
 
         /// <summary>
@@ -158,10 +158,28 @@ namespace LanguageServer.VsCode.Contracts
         public TextDocumentSignatureHelpCapability SignatureHelp { get; set; }
 
         /// <summary>
+        /// Capabilities specific to the `textDocument/declaration` request. (LSP 3.14)
+        /// </summary>
+        [JsonProperty]
+        public DynamicClientCapability Declaration { get; set; }
+
+        /// <summary>
         /// The server provides goto definition support.
         /// </summary>
         [JsonProperty]
         public DynamicClientCapability Definition { get; set; }
+
+        /// <summary>
+        /// Capabilities specific to the `textDocument/implementation` request. (LSP 3.6)
+        /// </summary>
+        [JsonProperty]
+        public DynamicClientCapability Implementation { get; set; }
+
+        /// <summary>
+        /// Capabilities specific to the `textDocument/typeDefinition` request. (LSP 3.6)
+        /// </summary>
+        [JsonProperty]
+        public DynamicClientCapability TypeDefinition { get; set; }
 
         /// <summary>
         /// The server provides find references support.
@@ -200,6 +218,19 @@ namespace LanguageServer.VsCode.Contracts
         public DynamicClientCapability CodeLens { get; set; }
 
         /// <summary>
+        /// Capabilities specific to the `textDocument/documentLink` request.
+        /// </summary>
+        [JsonProperty]
+        public DynamicClientCapability DocumentLink { get; set; }
+
+        /// <summary>
+        /// Capabilities specific to the `textDocument/documentColor` and the `textDocument/colorPresentation` request.
+        /// (LSP 3.6)
+        /// </summary>
+        [JsonProperty]
+        public DynamicClientCapability ColorProvider { get; set; }
+
+        /// <summary>
         /// The server provides document formatting.
         /// </summary>
         [JsonProperty]
@@ -222,6 +253,24 @@ namespace LanguageServer.VsCode.Contracts
         /// </summary>
         [JsonProperty]
         public DynamicClientCapability Rename { get; set; }
+
+        /// <summary>
+        /// Capabilities specific to the `textDocument/publishDiagnostics` notification.
+        /// </summary>
+        [JsonProperty]
+        public DynamicClientCapability PublishDiagnostics { get; set; }
+
+        /// <summary>
+        /// Capabilities specific to the `textDocument/foldingRange` notification. (LSP 3.10)
+        /// </summary>
+        [JsonProperty]
+        public FoldingRangeClientCapabilities FoldingRange { get; set; }
+
+        /// <summary>
+        /// Capabilities specific to the `textDocument/selectionRange` notification. (LSP 3.15)
+        /// </summary>
+        [JsonProperty]
+        public DynamicClientCapability SelectionRange { get; set; }
 
     }
 
@@ -352,7 +401,35 @@ namespace LanguageServer.VsCode.Contracts
         public IList<MarkupKind> DocumentationFormat { get; set; }
     }
 
-    public class WindowCapability : ClientCapability
+    [JsonObject(MemberSerialization.OptIn)]
+    public class DocumentLinkClientCapabilities : DynamicClientCapability
+    {
+        /// <summary>
+        /// Whether the client supports the `tooltip` property on `DocumentLink`. (LSP 3.15)
+        /// </summary>
+        [JsonProperty]
+        public bool TooltipSupport { get; set; }
+    }
+
+    [JsonObject(MemberSerialization.OptIn)]
+    public class FoldingRangeClientCapabilities : DynamicClientCapability
+    {
+        /// <summary>
+        /// The maximum number of folding ranges that the client prefers to receive per document.
+        /// The value serves as a hint, servers are free to follow the limit.
+        /// </summary>
+        [JsonProperty]
+        public int RangeLimit { get; set; }
+
+        /// <summary>
+        /// If set, the client signals that it only supports folding complete lines. If set, client will
+        /// ignore specified `startCharacter` and `endCharacter` properties in a FoldingRange.
+        /// </summary>
+        [JsonProperty]
+        public bool LineFoldingOnly { get; set; }
+    }
+
+    public class WindowClientCapability : ClientCapability
     {
         /// <summary>
         /// Whether client supports handling progress notifications.
