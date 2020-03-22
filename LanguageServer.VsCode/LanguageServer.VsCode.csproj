@@ -6,7 +6,7 @@
     <PackageId>CXuesong.LanguageServer.VsCode</PackageId>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>CXuesong</Authors>
-    <Version>0.3</Version>
+    <Version>0.3.5</Version>
     <Company />
     <Description>A .NET Language Server infrastructure library for VSCode.</Description>
     <Copyright>Copyright 2020 CXuesong</Copyright>
@@ -23,6 +23,8 @@
     <AssemblyOriginatorKeyFile>../LanguageServer.snk</AssemblyOriginatorKeyFile>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <NoWarn>$(NoWarn);1701;1702;1705;1573;1591;NU5105</NoWarn>
+    <PublishRepositoryUrl>True</PublishRepositoryUrl>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,6 +36,7 @@
   <ItemGroup>
     <PackageReference Include="CXuesong.JsonRpc.DynamicProxy" Version="0.5.3" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19554-01" PrivateAssets="All" />
   </ItemGroup>
 
   <PropertyGroup Condition=" $([System.Text.RegularExpressions.Regex]::IsMatch($(TargetFramework), `netstandard2.[1-9]$`)) ">
