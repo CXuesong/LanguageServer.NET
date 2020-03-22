@@ -9,7 +9,7 @@ namespace LanguageServer.VsCode.Contracts.Client
     /// <summary>
     /// A class that puts all the Language Protocol client-side proxy methods together.
     /// </summary>
-    public class ClientProxy
+    public sealed class ClientProxy
     {
 
         /// <summary>
@@ -40,8 +40,7 @@ namespace LanguageServer.VsCode.Contracts.Client
         /// The client used to send JSON RPC requests.
         /// </summary>
         public JsonRpcClient RpcClient { get; }
-
-
+        
         private readonly Lazy<IClient> _Client;
         private readonly Lazy<IDocument> _Document;
         private readonly Lazy<ITelemetry> _Telemetry;

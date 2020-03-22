@@ -5,11 +5,18 @@ using Newtonsoft.Json.Linq;
 namespace LanguageServer.VsCode.Contracts
 {
 
+    /// <summary>
+    /// Base class for client capabilities.
+    /// This class provides some basic operations, such as implicit <see cref="bool"/> conversion.
+    /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
     public class ClientCapability
     {
         public static readonly ClientCapability Empty = new ClientCapability();
 
+        /// <summary>
+        /// Returns <c>true</c> only when the current <see cref="ClientCapability"/> is not <c>null</c>.
+        /// </summary>
         public static implicit operator bool(ClientCapability cap)
         {
             return cap != null;
@@ -48,6 +55,12 @@ namespace LanguageServer.VsCode.Contracts
         /// </summary>
         [JsonProperty]
         public TextDocumentCapability TextDocument { get; set; }
+
+        /// <summary>
+        /// Window specific client capabilities.
+        /// </summary>
+        [JsonProperty]
+        public WindowCapability Window { get; set; }
 
         /// <summary>
         /// Experimental client capabilities.
@@ -337,6 +350,15 @@ namespace LanguageServer.VsCode.Contracts
         /// </summary>
         [JsonProperty]
         public IList<MarkupKind> DocumentationFormat { get; set; }
+    }
+
+    public class WindowCapability : ClientCapability
+    {
+        /// <summary>
+        /// Whether client supports handling progress notifications.
+        /// </summary>
+        [JsonProperty]
+        public bool WorkDoneProgress { get; set; }
     }
 
 }

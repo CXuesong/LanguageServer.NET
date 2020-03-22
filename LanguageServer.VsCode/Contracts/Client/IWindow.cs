@@ -47,5 +47,29 @@ namespace LanguageServer.VsCode.Contracts.Client
         /// <param name="message">The actual message.</param>
         [JsonRpcMethod(IsNotification = true)]
         Task LogMessage(MessageType type, string message);
+
+        [JsonRpcMethod("window/workDoneProgress/create")]
+        Task CreateWorkDoneProgress(string token);
+
+        [JsonRpcMethod("window/workDoneProgress/create")]
+        Task CreateWorkDoneProgress(int token);
+
+        /// <summary>
+        /// Report any kind of progress including work done progress (usually used to report progress in the user interface using a progress bar)
+        /// and partial result progress to support streaming of results. (LSP 3.15, <c>$/progress</c>)
+        /// </summary>
+        /// <param name="token">The progress token provided by the client or server.</param>
+        /// <param name="value">The progress data.</param>
+        /// <remarks>
+        /// Progress is reported against a token. The token is different than the request ID which allows to report progress
+        /// out of band and also for notification.
+        /// </remarks>
+        [JsonRpcMethod("$/progress", IsNotification = true)]
+        void ReportWorkDoneProgress(string token, WorkDoneProgress value);
+
+        /// <inheritdoc cref="ReportWorkDoneProgress(string, WorkDoneProgress)"/>
+        [JsonRpcMethod("$/progress", IsNotification = true)]
+        void ReportWorkDoneProgress(int token, WorkDoneProgress value);
+
     }
 }
