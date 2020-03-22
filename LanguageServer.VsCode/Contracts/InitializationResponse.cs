@@ -56,68 +56,80 @@ namespace LanguageServer.VsCode.Contracts
     /// <summary>
     /// Defines capabilities provided by the language server.
     /// </summary>
-    [JsonObject(MemberSerialization.OptOut)]
+    [JsonObject]
     public class ServerCapabilities
     {
         /// <summary>
         /// Defines how text documents are synced. Is either a detailed structure defining each notification or
         /// for backwards compatibility the <see cref="TextDocumentSyncKind" /> number.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public TextDocumentSyncOptions TextDocumentSync { get; set; }
 
         /// <summary>
         /// The server provides hover support.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public HoverOptions HoverProvider { get; set; }
 
         /// <summary>
         /// The server provides completion support.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public CompletionOptions CompletionProvider { get; set; }
 
         /// <summary>
         /// The server provides signature help support.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public SignatureHelpOptions SignatureHelpProvider { get; set; }
 
         /// <summary>
         /// The server provides go to declaration support. (LSP 3.14)
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DeclarationOptions DeclarationProvider { get; set; }
 
         /// <summary>
         /// The server provides goto definition support.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DefinitionOptions DefinitionProvider { get; set; }
 
         /// <summary>
         /// The server provides goto type definition support. (LSP 3.6)
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)] 
         public TypeDefinitionOptions TypeDefinitionProvider { get; set; }
 
         /// <summary>
         /// The server provides goto implementation support. (LSP 3.6)
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public ImplementationOptions ImplementationProvider { get; set; }
 
         /// <summary>
         /// The server provides find references support.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public ReferenceOptions ReferencesProvider { get; set; }
 
         /// <summary>
         /// The server provides document highlight support.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DocumentHighlightOptions DocumentHighlightProvider { get; set; }
 
         /// <summary>
         /// The server provides document symbol support.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DocumentSymbolOptions DocumentSymbolProvider { get; set; }
 
         /// <summary>
         /// The server provides workspace symbol support.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public WorkspaceSymbolOptions WorkspaceSymbolProvider { get; set; }
 
         /// <summary>
@@ -128,66 +140,79 @@ namespace LanguageServer.VsCode.Contracts
         /// valid if the client signals code action literal support via the property
         /// <c>textDocument.codeAction.codeActionLiteralSupport</c>.
         /// </remarks>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public CodeActionOptions CodeActionProvider { get; set; }
 
         /// <summary>
         /// The server provides code lens.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public CodeLensOptions CodeLensProvider { get; set; }
 
         /// <summary>
         /// The server provides document link support.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DocumentLinkOptions DocumentLinkProvider { get; set; }
 
         /// <summary>
         /// The server provides color provider support. (LSP 3.6)
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DocumentColorOptions ColorProvider { get; set; }
 
         /// <summary>
         /// The server provides document formatting.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DocumentFormattingOptions DocumentFormattingProvider { get; set; }
 
         /// <summary>
         /// The server provides document range formatting.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DocumentRangeFormattingOptions DocumentRangeFormattingProvider { get; set; }
 
         /// <summary>
         /// The server provides document formatting on typing.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DocumentOnTypeFormattingOptions DocumentOnTypeFormattingProvider { get; set; }
 
         /// <summary>
         /// The server provides rename support.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public RenameOptions RenameProvider { get; set; }
 
         /// <summary>
         /// The server provides folding provider support. (LSP 3.10)
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public FoldingRangeOptions FoldingRangeProvider { get; set; }
 
         /// <summary>
         /// The server provides execute command support.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public ExecuteCommandOptions ExecuteCommandProvider { get; set; }
 
         /// <summary>
         /// The server provides selection range support. (LSP 3.15)
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public SelectionRangeOptions SelectionRangeProvider { get; set; }
 
         /// <summary>
         /// Workspace specific server capabilities.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public WorkspaceOptions Workspace { get; set; }
 
         /// <summary>
         /// Experimental server capabilities.
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public JToken Experimental { get; set; }
     }
 
