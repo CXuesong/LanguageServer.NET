@@ -160,13 +160,15 @@ namespace LanguageServer.VsCode.Contracts
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             var v = (MarkupKind)value;
-            writer.WriteValue(v);
+            writer.WriteValue(v.Value);
         }
 
         /// <inheritdoc />
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var v = reader.ReadAsString();
+            if (reader.TokenType != JsonToken.String)
+                throw new InvalidOperationException($"Cannot parse MarkupKind: Expect string token. Get {reader.TokenType}.");
+            var v = (string) reader.Value;
             if (v == null) return null;
             if (v == "plaintext") return MarkupKind.PlainText;
             if (v == "markdown") return MarkupKind.Markdown;
