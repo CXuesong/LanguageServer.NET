@@ -49,10 +49,7 @@ namespace LanguageServer.VsCode.Contracts.Client
         Task LogMessage(MessageType type, string message);
 
         [JsonRpcMethod("window/workDoneProgress/create")]
-        Task CreateWorkDoneProgress(string token);
-
-        [JsonRpcMethod("window/workDoneProgress/create")]
-        Task CreateWorkDoneProgress(int token);
+        Task CreateWorkDoneProgress(ProgressToken token);
 
         /// <summary>
         /// Report any kind of progress including work done progress (usually used to report progress in the user interface using a progress bar)
@@ -65,11 +62,7 @@ namespace LanguageServer.VsCode.Contracts.Client
         /// out of band and also for notification.
         /// </remarks>
         [JsonRpcMethod("$/progress", IsNotification = true)]
-        void ReportWorkDoneProgress(string token, WorkDoneProgress value);
-
-        /// <inheritdoc cref="ReportWorkDoneProgress(string, WorkDoneProgress)"/>
-        [JsonRpcMethod("$/progress", IsNotification = true)]
-        void ReportWorkDoneProgress(int token, WorkDoneProgress value);
+        void ReportWorkDoneProgress(ProgressToken token, WorkDoneProgress value);
 
     }
 }

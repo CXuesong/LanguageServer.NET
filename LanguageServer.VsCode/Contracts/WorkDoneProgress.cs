@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
+using LanguageServer.VsCode.Contracts.Client;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
@@ -197,7 +199,160 @@ namespace LanguageServer.VsCode.Contracts
         /// <inheritdoc />
         public override bool CanConvert(Type objectType)
         {
-            throw new NotImplementedException();
+            return typeof(WorkDoneProgress).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo());
+        }
+    }
+
+    ///// <summary>
+    ///// Provides an optional token that a server can use to report work done progress.
+    ///// </summary>
+    //public interface IWorkDoneProgressParams
+    //{
+    //    /// <summary>
+    //    /// An optional token that a server can use to report work done progress.
+    //    /// </summary>
+    //    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    //    ProgressToken WorkDoneToken { get; set; }
+    //}
+
+    ///// <summary>
+    ///// Provides an a parameter literal used to pass a partial result token.
+    ///// </summary>
+    //public interface IPartialResultParams
+    //{
+    //    /// <summary>
+    //    /// An optional token that a server can use to report partial results (e.g. streaming) to the client.
+    //    /// </summary>
+    //    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    //    ProgressToken PartialResultToken { get; set; }
+    //}
+
+    /// <summary>
+    /// Represents a <see cref="string"/>, <see cref="int"/> or <see cref="long"/> value indicating
+    /// a token used to report progress.
+    /// </summary>
+    /// <seealso cref="WorkDoneProgress"/>
+    /// <seealso cref="IWindow.CreateWorkDoneProgress"/>
+    [JsonConverter(typeof(ProgressTokenJsonConverter))]
+    public struct ProgressToken : IEquatable<ProgressToken>
+    {
+
+        public static readonly ProgressToken Empty = default;
+
+        public ProgressToken(string value)
+        {
+            Value = value;
+        }
+
+        public ProgressToken(int value)
+        {
+            Value = value;
+        }
+
+        public ProgressToken(long value)
+        {
+            if (value >= int.MinValue && value <= int.MaxValue)
+                Value = (int) value;
+            else
+                Value = value;
+        }
+
+        public ProgressToken(object value)
+        {
+            if (value is null || value is string || value is int)
+                Value = value;
+            var longValue = Convert.ToInt64(value);
+            if (longValue >= int.MinValue && longValue <= int.MaxValue)
+                Value = (int)longValue;
+            else
+                Value = longValue;
+        }
+
+        public object Value { get; }
+
+        public static implicit operator ProgressToken(string rhs)
+        {
+            return new ProgressToken(rhs);
+        }
+
+        public static implicit operator ProgressToken(int rhs)
+        {
+            return new ProgressToken(rhs);
+        }
+
+        public static implicit operator ProgressToken(long rhs)
+        {
+            return new ProgressToken(rhs);
+        }
+
+        public static explicit operator string(ProgressToken rhs)
+        {
+            return (string) rhs.Value;
+        }
+
+        public static explicit operator int(ProgressToken rhs)
+        {
+            return (int)rhs.Value;
+        }
+
+        public static explicit operator long(ProgressToken rhs)
+        {
+            return (long)rhs.Value;
+        }
+
+        /// <inheritdoc />
+        public bool Equals(ProgressToken other)
+        {
+            return Equals(Value, other.Value);
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            return obj is ProgressToken other && Equals(other);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+#if BCL_FEATURE_HASHCODE
+            return HashCode.Combine(Value);
+#else
+            return Value != null ? Value.GetHashCode() : 0;
+#endif
+        }
+
+        public static bool operator ==(ProgressToken left, ProgressToken right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(ProgressToken left, ProgressToken right)
+        {
+            return !left.Equals(right);
+        }
+    }
+
+    public class ProgressTokenJsonConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(ProgressToken);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            if (objectType != typeof(ProgressToken))
+                throw new NotSupportedException();
+            return new ProgressToken(reader.Value);
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            if (value is ProgressToken token)
+                writer.WriteValue(token.Value);
+            else
+                throw new NotSupportedException();
         }
     }
 

@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <PropertyGroup Condition=" $([System.Text.RegularExpressions.Regex]::IsMatch($(TargetFramework), `netstandard2.[1-9]$`)) ">
-    <DefineConstants>$(DefineConstants);BCL_FEATURE_SPAN</DefineConstants>
+    <DefineConstants>$(DefineConstants);BCL_FEATURE_SPAN;BCL_FEATURE_HASHCODE;LANG_FEATURE_INTERFACE_DEFAULT_METHODS</DefineConstants>
   </PropertyGroup>
 
 </Project>
