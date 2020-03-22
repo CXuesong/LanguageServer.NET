@@ -4,14 +4,6 @@
 
 A .NET server-side implementation of [Language Server Protocol](https://microsoft.github.io/language-server-protocol) infrastructure library for VSCode, and hopefully, might also be used with other IDEs that support Language Server Protocol. It provides necessary data structure used for JSON serialization and JSON RPC calls for LSP 3.6 and up.
 
-If you found any missing data structures, please open an issue in this repository.
-
-![Screenshot of DemoLanguageServer](README.resource/Screenshot.gif)
-
-Based on [CXuesong/JsonRpc.Standard](https://github.com/CXuesong/JsonRpc.Standard), this .NET Standard library intends to provide basic interfaces and data structures so that you can write a language server in C#, build it on .NET Core and, with the help of the client-side code of [Microsoft/vscode-languageserver-node](https://github.com/Microsoft/vscode-languageserver-node), use it in VSCode.
-
-For an actual (WIP) [Wikitext](https://en.wikipedia.org/wiki/Wiki_markup) language server based on this library, please take a look at [CXuesong/MwLanguageServer](https://github.com/CXuesong/MwLanguageServer).
-
 The library is now available on NuGet. To install the package, run the following command 
 
 ```powershell
@@ -21,10 +13,19 @@ Install-Package CXuesong.LanguageServer.VsCode -Pre
 dotnet add package CXuesong.LanguageServer.VsCode -Pre
 ```
 
+If you found any missing data structures, please open an issue in this repository.
+
+Based on [CXuesong/JsonRpc.Standard](https://github.com/CXuesong/JsonRpc.Standard), this .NET Standard library intends to provide basic interfaces and data structures so that you can write a language server in C#, build it on .NET Core and, with the help of the client-side code of [Microsoft/vscode-languageserver-node](https://github.com/Microsoft/vscode-languageserver-node), use it in VSCode.
+
+For an actual (WIP) [Wikitext](https://en.wikipedia.org/wiki/Wiki_markup) language server based on this library, please take a look at [CXuesong/MwLanguageServer](https://github.com/CXuesong/MwLanguageServer).
+
 ## To set up the demo
+
+![Screenshot of DemoLanguageServer](README.resource/Screenshot.gif)
 
 ### Prerequesites
 * .NET Core SDK 3.1
+* (Optionally) Visual Studio 2019
 * yarn (or npm)
 
 ### Steps
