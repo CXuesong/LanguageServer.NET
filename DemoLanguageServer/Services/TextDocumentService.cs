@@ -81,7 +81,7 @@ namespace DemoLanguageServer.Services
         {
             new CompletionItem(".NET", CompletionItemKind.Keyword,
                 "Keyword1",
-                "Short for **.NET Framework**, a software framework by Microsoft (possibly its subsets) or later open source .NET Core.",
+                MarkupContent.Markdown("Short for **.NET Framework**, a software framework by Microsoft (possibly its subsets) or later open source .NET Core."),
                 null),
             new CompletionItem(".NET Standard", CompletionItemKind.Keyword,
                 "Keyword2",
