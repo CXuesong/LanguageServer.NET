@@ -69,7 +69,7 @@ namespace LanguageServer.VsCode.Contracts
     }
 
     /// <summary>
-    /// Descibe options to be used when registered for code lens events.
+    /// Describe options to be used when registered for code lens events.
     /// </summary>
     public class CodeLensRegistrationOptions : TextDocumentRegistrationOptions
     {
