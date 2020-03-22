@@ -2,7 +2,9 @@
 
 [![NuGet version (CXuesong.LanguageServer.VsCode)](https://img.shields.io/nuget/vpre/CXuesong.LanguageServer.VsCode.svg?style=flat-square)](https://www.nuget.org/packages/CXuesong.LanguageServer.VsCode) [![Gitter](https://badges.gitter.im/CXuesong/LanguageServer.NET.svg?style=flat-square)](https://gitter.im/CXuesong/LanguageServer.NET?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-A .NET server-side implementation of [Language Server Protocol](https://microsoft.github.io/language-server-protocol) infrastructure library for VSCode, and hopefully, might also be used with other IDEs that support Language Server Protocol. It supports LSP 2.0 and should support LSP 3.x (if not, please open an issue; thanks).
+A .NET server-side implementation of [Language Server Protocol](https://microsoft.github.io/language-server-protocol) infrastructure library for VSCode, and hopefully, might also be used with other IDEs that support Language Server Protocol. It provides necessary data structure used for JSON serialization and JSON RPC calls for LSP 3.6 and up.
+
+If you found any missing data structures, please open an issue in this repository.
 
 ![Screenshot of DemoLanguageServer](README.resource/Screenshot.gif)
 
