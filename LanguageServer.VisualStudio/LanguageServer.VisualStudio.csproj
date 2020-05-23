@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CXuesong.LanguageServer.VisualStudio</PackageId>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>CXuesong</Authors>
+    <Version>0.3.5</Version>
+    <AssemblyVersion>0.3.5.0</AssemblyVersion>
+    <FileVersion>0.3.5.0</FileVersion>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Company />
+    <Description>A .NET Language Server infrastructure library for Visual Studio.</Description>
+    <Copyright>Copyright 2020 CXuesong</Copyright>
+    <PackageTags>vscode visual-studio language-server language-server-protocol</PackageTags>
+    <NeutralLanguage>en-us</NeutralLanguage>
+    <PackageProjectUrl>https://github.com/CXuesong/LanguageServer.NET</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/CXuesong/LanguageServer.NET</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>See https://github.com/CXuesong/LanguageServer.NET/releases .</PackageReleaseNotes>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../LanguageServer.snk</AssemblyOriginatorKeyFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <NoWarn>$(NoWarn);1701;1702;1705;1573;1591;NU5105</NoWarn>
+    <PublishRepositoryUrl>True</PublishRepositoryUrl>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LanguageServer.VsCode\LanguageServer.VsCode.csproj" />
+  </ItemGroup>
+
+</Project>
