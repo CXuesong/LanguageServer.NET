@@ -8,9 +8,9 @@ The library is now available on NuGet. To install the package, run the following
 
 ```powershell
 # Package Manager Console
-Install-Package CXuesong.LanguageServer.VsCode -Pre
+Install-Package CXuesong.LanguageServer.VsCode
 # dotnet CLI
-dotnet add package CXuesong.LanguageServer.VsCode -Pre
+dotnet add package CXuesong.LanguageServer.VsCode
 ```
 
 If you found any missing data structures, please open an issue in this repository.
