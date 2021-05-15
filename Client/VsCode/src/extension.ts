@@ -1,11 +1,7 @@
-"use strict";
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-
-import * as vscode from "vscode";
-import * as languageClient from "vscode-languageclient";
-import * as path from "path";
 import * as fs from "fs";
+import * as path from "path";
+import * as vscode from "vscode";
+import { LanguageClient, LanguageClientOptions, ServerOptions } from "vscode-languageclient/node";
 
 // Defines the search path of your language server DLL. (.NET Core)
 const languageServerPaths = [
@@ -13,7 +9,7 @@ const languageServerPaths = [
     "../../DemoLanguageServer/bin/Debug/netcoreapp3.1/DemoLanguageServer.dll",
 ]
 
-let client: languageClient.LanguageClient | undefined;
+let client: LanguageClient | undefined;
 
 async function activateLanguageServer(context: vscode.ExtensionContext) {
     // The server is implemented in an executable application.
@@ -37,12 +33,12 @@ async function activateLanguageServer(context: vscode.ExtensionContext) {
 
     // If the extension is launched in debug mode then the debug server options are used
     // Otherwise the run options are used
-    let serverOptions: languageClient.ServerOptions = {
+    let serverOptions: ServerOptions = {
         run: { command: "dotnet", args: [serverModule], options: { cwd: workPath } },
         debug: { command: "dotnet", args: [serverModule, "--debug"], options: { cwd: workPath } }
     }
     // Options to control the language client
-    let clientOptions: languageClient.LanguageClientOptions = {
+    let clientOptions: LanguageClientOptions = {
         // Register the server for plain text documents
         documentSelector: ["demolang"],
         synchronize: {
@@ -57,7 +53,7 @@ async function activateLanguageServer(context: vscode.ExtensionContext) {
     }
 
     // Create the language client and start the client.
-    client = new languageClient.LanguageClient("demoLanguageServer", "Demo Language Server", serverOptions, clientOptions);
+    client = new LanguageClient("demoLanguageServer", "Demo Language Server", serverOptions, clientOptions);
     let disposable = client.start();
 
     // Push the disposable to the context's subscriptions so that the 
