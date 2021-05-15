@@ -6,18 +6,18 @@
     <PackageId>CXuesong.LanguageServer.VsCode</PackageId>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>CXuesong</Authors>
-    <Version>0.3.6-int.1</Version>
+    <Version>0.3.6-int.2</Version>
+    <AssemblyVersion>0.3.6.2</AssemblyVersion>
+    <FileVersion>0.3.6.2</FileVersion>
     <Company />
     <Description>A .NET Language Server infrastructure library for VSCode.</Description>
-    <Copyright>Copyright 2020 CXuesong</Copyright>
+    <Copyright>Copyright 2021 CXuesong</Copyright>
     <PackageTags>vscode language-server language-server-protocol</PackageTags>
     <NeutralLanguage>en-us</NeutralLanguage>
     <PackageProjectUrl>https://github.com/CXuesong/LanguageServer.NET</PackageProjectUrl>
     <RepositoryUrl>https://github.com/CXuesong/LanguageServer.NET</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReleaseNotes>See https://github.com/CXuesong/LanguageServer.NET/releases .</PackageReleaseNotes>
-    <AssemblyVersion>0.2.0.0</AssemblyVersion>
-    <FileVersion>0.2.0.0</FileVersion>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../LanguageServer.snk</AssemblyOriginatorKeyFile>
@@ -36,7 +36,7 @@
   <ItemGroup>
     <PackageReference Include="CXuesong.JsonRpc.DynamicProxy" Version="0.5.3" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19554-01" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <PropertyGroup Condition=" $([System.Text.RegularExpressions.Regex]::IsMatch($(TargetFramework), `netstandard2.[1-9]$`)) ">
