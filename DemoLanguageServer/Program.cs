@@ -11,8 +11,8 @@ using JsonRpc.Contracts;
 using JsonRpc.Server;
 using JsonRpc.Streams;
 using LanguageServer.VsCode;
+using LanguageServer.VsCode.Contracts;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Debug;
 
 namespace DemoLanguageServer
 {
@@ -41,7 +41,7 @@ namespace DemoLanguageServer
                 var contractResolver = new JsonRpcContractResolver
                 {
                     NamingStrategy = new CamelCaseJsonRpcNamingStrategy(),
-                    ParameterValueConverter = new CamelCaseJsonValueConverter(),
+                    ParameterValueConverter = new LanguageServiceParameterValueConverter(),
                 };
                 var clientHandler = new StreamRpcClientHandler();
                 var client = new JsonRpcClient(clientHandler);
