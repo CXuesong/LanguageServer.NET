@@ -23,7 +23,7 @@ namespace DemoLanguageServer.Services
         }
 
         [JsonRpcMethod]
-        public SignatureHelp SignatureHelp(TextDocumentIdentifier textDocument, Position position)
+        public SignatureHelp SignatureHelp(TextDocumentIdentifier textDocument, Position position, SignatureHelpContext context = null)
         {
             return new SignatureHelp(new List<SignatureInformation>
             {
